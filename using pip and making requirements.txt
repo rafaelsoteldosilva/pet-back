@@ -1,0 +1,8 @@
+#
+use 'py -m pip' or 'python.exe -m pip'
+
+# To capture the current state of the environment 
+python -m pip freeze > requirements.txt
+
+# To set up a new environment
+python -m pip install -r requirements.txt

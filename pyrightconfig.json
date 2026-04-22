@@ -1,0 +1,14 @@
+{
+    "typeCheckingMode": "strict",
+    "reportAttributeAccessIssue": true,
+    "reportUnknownMemberType": false,
+    "reportUnknownVariableType": false,
+    "reportUnknownArgumentType": false,
+    "reportUnknownLambdaType": false,
+    "reportUnknownParameterType": false,
+    "reportMissingTypeStubs": false,
+
+    "django": {
+        "settingsModule": "petcontrolproject.settings"
+    }
+}
