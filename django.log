@@ -1,0 +1,230 @@
+[INFO] 2026-04-22 15:15:20,069 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 15:55:08,316 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 15:55:13,232 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 15:55:42,753 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1846
+[INFO] 2026-04-22 15:55:46,425 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 15:55:55,621 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 15:56:00,110 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 15:57:39,832 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1846
+[INFO] 2026-04-22 15:57:44,562 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 15:57:58,266 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 15:58:04,228 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1762
+[INFO] 2026-04-22 16:13:12,959 django.server: "OPTIONS /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 0
+[INFO] 2026-04-22 16:13:13,143 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:21:27,519 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:23:38,591 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:25:06,171 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:25:16,370 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[WARNING] 2026-04-22 16:32:29,213 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:32:29,214 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[INFO] 2026-04-22 16:32:36,102 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1760
+[INFO] 2026-04-22 16:32:43,407 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:32:59,525 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1847
+[INFO] 2026-04-22 16:33:04,353 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[WARNING] 2026-04-22 16:34:01,663 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:34:01,665 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 41
+[WARNING] 2026-04-22 16:34:07,547 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:34:07,548 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[INFO] 2026-04-22 16:34:09,550 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[WARNING] 2026-04-22 16:34:15,358 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:34:15,359 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[WARNING] 2026-04-22 16:34:22,585 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:34:22,590 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[INFO] 2026-04-22 16:34:43,364 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1847
+[INFO] 2026-04-22 16:34:46,834 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[WARNING] 2026-04-22 16:34:53,077 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:34:53,079 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[INFO] 2026-04-22 16:35:44,935 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1760
+[INFO] 2026-04-22 16:35:53,436 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1760
+[INFO] 2026-04-22 16:36:02,836 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:36:08,495 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1760
+[INFO] 2026-04-22 16:36:15,823 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1763
+[INFO] 2026-04-22 16:46:31,689 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1795
+[INFO] 2026-04-22 16:46:36,058 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[WARNING] 2026-04-22 16:46:43,543 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:46:43,544 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 57
+[INFO] 2026-04-22 16:58:53,403 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1729
+[INFO] 2026-04-22 16:59:01,999 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 16:59:07,555 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1729
+[INFO] 2026-04-22 16:59:15,938 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 16:59:40,222 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1795
+[INFO] 2026-04-22 16:59:44,139 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 16:59:52,166 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1729
+[WARNING] 2026-04-22 16:59:57,570 django.request: Bad Request: /api/v1/pets-get-or-update/1/2/basic-data/
+[WARNING] 2026-04-22 16:59:57,571 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 400 41
+[INFO] 2026-04-22 17:00:04,377 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 17:00:22,754 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1795
+[INFO] 2026-04-22 17:00:26,816 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[ERROR] 2026-04-22 17:01:11,610 django.request: Internal Server Error: /api/v1/pets-get-or-update/1/2/basic-data/
+Traceback (most recent call last):
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\interfaces\http\endpoints\pet\pet_basic_data_endpoint.py", line 51, in patch
+    update_pet(
+  File "C:\Users\Rafael\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 193, in update_pet
+    payload = _normalize_write_data(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 83, in _normalize_write_data
+    raise ValueError(f"Field '{field_name}' cannot be updated")
+ValueError: Field 'reference' cannot be updated
+[ERROR] 2026-04-22 17:01:11,616 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 500 119094
+[INFO] 2026-04-22 17:03:07,817 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1795
+[INFO] 2026-04-22 17:03:12,114 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 17:03:19,284 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1740
+[INFO] 2026-04-22 17:03:41,596 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 17:03:54,712 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1752
+[INFO] 2026-04-22 17:04:07,373 django.server: "GET /api/v1/catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-04-22 17:04:12,176 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1758
+[INFO] 2026-04-22 17:04:27,056 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 17:10:30,017 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 17:10:35,444 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[ERROR] 2026-04-22 17:15:05,466 django.request: Internal Server Error: /api/v1/pets-get-or-update/1/2/basic-data/
+Traceback (most recent call last):
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\interfaces\http\endpoints\pet\pet_basic_data_endpoint.py", line 51, in patch
+    update_pet(
+  File "C:\Users\Rafael\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 195, in update_pet
+    payload = _normalize_write_data(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 85, in _normalize_write_data
+    raise ValueError(f"Field '{field_name}' cannot be updated")
+ValueError: Field 'has_pedigree' cannot be updated
+[ERROR] 2026-04-22 17:15:05,473 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 500 119119
+[ERROR] 2026-04-22 17:15:10,297 django.request: Internal Server Error: /api/v1/pets-get-or-update/1/2/basic-data/
+Traceback (most recent call last):
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\interfaces\http\endpoints\pet\pet_basic_data_endpoint.py", line 51, in patch
+    update_pet(
+  File "C:\Users\Rafael\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 195, in update_pet
+    payload = _normalize_write_data(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 85, in _normalize_write_data
+    raise ValueError(f"Field '{field_name}' cannot be updated")
+ValueError: Field 'has_pedigree' cannot be updated
+[ERROR] 2026-04-22 17:15:10,300 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 500 119119
+[INFO] 2026-04-22 17:17:01,896 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1812
+[INFO] 2026-04-22 17:17:06,062 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[ERROR] 2026-04-22 17:17:12,575 django.request: Internal Server Error: /api/v1/pets-get-or-update/1/2/basic-data/
+Traceback (most recent call last):
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\WebDev\pet-control-project\pet-back\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\interfaces\http\endpoints\pet\pet_basic_data_endpoint.py", line 51, in patch
+    update_pet(
+  File "C:\Users\Rafael\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 195, in update_pet
+    payload = _normalize_write_data(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WebDev\pet-control-project\pet-back\api\application\pet\commands\update_pet.py", line 85, in _normalize_write_data
+    raise ValueError(f"Field '{field_name}' cannot be updated")
+ValueError: Field 'has_pedigree' cannot be updated
+[ERROR] 2026-04-22 17:17:12,581 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 500 119119
+[INFO] 2026-04-22 17:22:07,314 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1812
+[INFO] 2026-04-22 17:22:11,067 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 17:22:17,183 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1768
+[INFO] 2026-04-22 17:22:23,838 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 17:24:00,140 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1768
+[INFO] 2026-04-22 17:45:40,438 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1812
+[INFO] 2026-04-22 17:45:44,593 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1768
+[INFO] 2026-04-22 18:23:23,749 django.server: "GET /api/v1/pets/get-all-pets-for-center/1/?search_type=responsible&query=cat HTTP/1.1" 200 1795
+[INFO] 2026-04-22 18:23:28,025 django.server: "GET /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1733
+[INFO] 2026-04-22 18:23:58,508 django.server: "OPTIONS /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 0
+[INFO] 2026-04-22 18:23:58,795 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1752
+[INFO] 2026-04-22 18:24:23,630 django.server: "GET /api/v1/catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-04-22 18:24:27,990 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1758
+[INFO] 2026-04-22 18:24:44,233 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 18:26:02,085 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1768
+[INFO] 2026-04-22 18:26:10,975 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769
+[INFO] 2026-04-22 18:27:26,073 django.server: "PATCH /api/v1/pets-get-or-update/1/2/basic-data/ HTTP/1.1" 200 1769

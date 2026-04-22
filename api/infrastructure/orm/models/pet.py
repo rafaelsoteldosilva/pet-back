@@ -218,16 +218,14 @@ class Pet(TrimFieldsMixin, models.Model):
         null=True,
     )
 
-    has_visual_identification = models.BooleanField(default=False)
-
-    visual_id_tag = models.CharField(
+    visual_tag = models.CharField(
         max_length=20,
         blank=True,
         null=True,
         help_text="Placa",
     )
 
-    visual_id_tattoo_description = models.CharField(
+    visual_identification_or_tattoo_description = models.CharField(
         max_length=100,
         blank=True,
         null=True,

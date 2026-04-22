@@ -6,7 +6,7 @@ from rest_framework import serializers
 class UpdatePetBasicDataSerializer(serializers.Serializer):
     name = serializers.CharField(
         required=False,
-        min_length=2,
+        min_length=1,
         max_length=255,
         allow_blank=False,
         trim_whitespace=True,
@@ -31,12 +31,6 @@ class UpdatePetBasicDataSerializer(serializers.Serializer):
         allow_null=True,
     )
 
-    body_description = serializers.CharField(
-        required=False,
-        allow_blank=True,
-        allow_null=True,
-    )
-
     size = serializers.CharField(
         required=False,
         allow_blank=True,
@@ -49,3 +43,19 @@ class UpdatePetBasicDataSerializer(serializers.Serializer):
         decimal_places=2,
         allow_null=True,
     )
+    
+    body_description = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+        max_length=300,
+    )
+    
+    reference = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        trim_whitespace=True,
+        max_length=100,
+    )
+    
+    has_pedigree = serializers.BooleanField(required=False)

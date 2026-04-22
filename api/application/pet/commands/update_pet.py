@@ -29,6 +29,8 @@ ALLOWED_FIELDS = {
     "body_description",
     "size",
     "last_weight",
+    "reference",
+    "has_pedigree"
 }
 
 
