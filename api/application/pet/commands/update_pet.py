@@ -82,7 +82,9 @@ def _normalize_write_data(data: dict[str, Any]) -> dict[str, Any]:
 
     for field_name in payload.keys():
         if field_name not in ALLOWED_FIELDS:
-            raise ValueError(f"Field '{field_name}' cannot be updated")
+            raise ValidationError(
+                {field_name: ["This field cannot be updated."]}
+            )
 
     if "species_id" in payload:
         payload["species_id"] = _coerce_required_int(
