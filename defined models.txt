@@ -1,0 +1,33 @@
+
+
+# Models located in api/infrastructure/orm/models/campaign.py:
+# Campaign, Campaign_Action, Campaign_Target, Campaign_Restriction_Set, Campaign_Enrollment,
+
+#
+
+# Models located in api/infrastructure/orm/models/catalog.py:
+# Global_Species, Global_Breed, Species_In_Center, Breed_In_Center, Disease_Group
+# Disease_Catalog, Problem_Group, Problem_Catalog, Consultation_Type, Procedure_Type
+# Vaccine_Type, Medication, Follow_Up_Category, Clinical_Focus_For_SOAP_Template, SOAP_Template
+# Consultation_Template, Procedure_Template
+
+#
+
+# Models located in aapi/infrastructure/orm/models/clinical.py:
+# Clinical_Event, Clinical_Event_Image, Consultation, Prescription, Follow_Up, Activity_Log, Appointment,
+
+#
+
+# Models located in api/infrastructure/orm/models/hospitalization.py:
+# Hospitalization, Hospitalization_Unit, Hospitalization_Unit_Assignment, Hospitalized_Pet_Daily_Record,
+
+#
+
+# Models located in api/infrastructure/orm/models/center.py:
+# Veterinary_Center, Veterinary_Center_Settings, Center_Clinical_Focus, Center_Staff_Membership, 
+# Personnel_Login_Session, Center_Contact, Image,
+#
+
+# Models in api/infrastructure/orm/models/pet.py:
+# Pet_History_Sequence, Pet_Contact_Link, Pet, Pet_Disease_Case, Pet_Problem_Case, Pet_Disease_Event, 
+# Clinical_Comorbidity, Pet_Problem_Event, Critical_Case, 
