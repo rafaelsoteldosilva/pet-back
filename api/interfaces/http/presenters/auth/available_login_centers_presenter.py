@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Iterable
 
 from api.infrastructure.orm.models import Center_Staff_Membership
+from api.shared.choices.choices import Choices_Role
 
 
 def available_login_centers_presenter(
@@ -16,6 +17,7 @@ def available_login_centers_presenter(
                 "id": membership.veterinary_center.id,
                 "name": membership.veterinary_center.name,
                 "role": membership.role,
+                "role_label": Choices_Role(membership.role).label,
             }
             for membership in memberships
         ]
