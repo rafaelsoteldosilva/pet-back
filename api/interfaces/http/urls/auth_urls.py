@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from api.interfaces.http.endpoints.auth.available_login_centers_endpoint import Available_login_centers_endpoint
 from api.interfaces.http.endpoints.auth.logout_endpoint import LogoutEndpoint
 from api.interfaces.http.endpoints.auth.me_endpoint import MeEndpoint
 from api.interfaces.http.endpoints.auth.pet_control_token_obtain_pair_endpoint import PetControlTokenObtainPairEndpoint
@@ -19,4 +20,10 @@ urlpatterns = [
     path("verify/", TokenVerifyView.as_view(), name="auth_verify"),
     path("logout/", LogoutEndpoint.as_view(), name="auth_logout"),
     path("me/", MeEndpoint.as_view(), name="auth_me"),
+    path(
+        "available-centers/",
+        Available_login_centers_endpoint.as_view(),
+        name="auth-available-centers",
+    ),
+
 ]
