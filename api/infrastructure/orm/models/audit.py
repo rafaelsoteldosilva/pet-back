@@ -9,6 +9,13 @@ from django.db import models
 from api.infrastructure.orm.models.center import Veterinary_Center
 
 
+class Action(models.TextChoices):
+    CREATE = "CREATE", "Create"
+    UPDATE = "UPDATE", "Update"
+    DELETE = "DELETE", "Delete"
+    SOFT_DELETE = "SOFT_DELETE", "Soft delete"
+    RESTORE = "RESTORE", "Restore"
+
 class Audit_Log(models.Model):
     """
     Generic audit trail entry.
@@ -16,14 +23,6 @@ class Audit_Log(models.Model):
     Stores who changed what, in which center, when it happened,
     and the before/after values.
     """
-
-    class Action(models.TextChoices):
-        CREATE = "CREATE", "Create"
-        UPDATE = "UPDATE", "Update"
-        DELETE = "DELETE", "Delete"
-        SOFT_DELETE = "SOFT_DELETE", "Soft delete"
-        RESTORE = "RESTORE", "Restore"
-
     veterinary_center = models.ForeignKey(
         Veterinary_Center,
         on_delete=models.PROTECT,

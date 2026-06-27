@@ -394,23 +394,23 @@ SEEDED_CENTER_CONTACT_EMAILS = [
 ]
 
 SEEDED_STAFF_EMAILS = [
-    "elsy.noguera@gmail.com",
+    "nombre.apellido@gmail.com",
     "juan.perez@gmail.com",
 ]
 
 
 STAFF_SEED_DATA: list[StaffSeedData] = [
     {
-        "email": "elsy.noguera@gmail.com",
+        "email": "nombre.apellido@gmail.com",
         "first_name": "Elsy",
         "last_name": "Noguera",
         "document_id": "26445363-1",
         "country_code": "CL",
         "cell_phone": "+5697573386349",
-        "password": "Chile.17",
+        "password": "Password.26",
         "center_key": "center_1",
         "role": "VETERINARIAN",
-        "work_email": "elsy.noguera@gmail.com",
+        "work_email": "nombre.apellido@gmail.com",
         "work_phone": "+5697573386349",
         "job_title": "Médica veterinaria",
         "professional_license_number": None,
@@ -423,7 +423,7 @@ STAFF_SEED_DATA: list[StaffSeedData] = [
         "document_id": "11111111-1",
         "country_code": "CL",
         "cell_phone": "+56922222222",
-        "password": "Chile.17",
+        "password": "Password.26",
         "center_key": "center_1",
         "role": "VETERINARIAN",
         "work_email": "juan.perez@gmail.com",
