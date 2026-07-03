@@ -416,3 +416,96 @@
 [INFO] 2026-07-02 17:22:16,636 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
 [INFO] 2026-07-02 17:22:16,878 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
 [INFO] 2026-07-02 17:22:20,751 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 204 0
+[INFO] 2026-07-03 09:39:59,236 django.server: "OPTIONS /api/v1/auth/available-centers/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:00,920 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-03 09:40:03,572 django.server: "OPTIONS /api/v1/auth/login/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:05,270 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-03 09:40:05,745 django.server: "OPTIONS /api/v1/auth/me/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:05,748 django.server: "OPTIONS /api/v1/auth/me/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:05,886 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 09:40:06,020 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 09:40:31,935 django.server: "OPTIONS /api/v1/center-vets/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:31,935 django.server: "OPTIONS /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:40:32,192 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 09:40:32,301 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-07-03 09:41:21,722 django.server: "OPTIONS /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:41:22,093 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 19745
+[INFO] 2026-07-03 09:41:26,952 django.server: "OPTIONS /api/v1/pet/1/2/get/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:41:27,200 django.server: "GET /api/v1/pet/1/2/get/ HTTP/1.1" 200 8152
+[WARNING] 2026-07-03 09:58:13,302 django.request: Unauthorized: /api/v1/auth/me/
+[WARNING] 2026-07-03 09:58:13,303 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 401 172
+[INFO] 2026-07-03 09:58:13,315 django.server: "OPTIONS /api/v1/auth/refresh/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 09:58:13,613 django.server: "POST /api/v1/auth/refresh/ HTTP/1.1" 200 862
+[INFO] 2026-07-03 09:58:13,818 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 09:58:20,328 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 09:58:20,372 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[WARNING] 2026-07-03 10:19:00,873 django.request: Unauthorized: /api/v1/all-pets/1/
+[WARNING] 2026-07-03 10:19:00,874 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 401 172
+[WARNING] 2026-07-03 10:19:00,970 django.request: Unauthorized: /api/v1/auth/refresh/
+[WARNING] 2026-07-03 10:19:00,971 django.server: "POST /api/v1/auth/refresh/ HTTP/1.1" 401 58
+[INFO] 2026-07-03 10:19:33,728 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-03 10:19:37,182 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-03 10:19:39,235 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 10:19:39,373 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 10:19:50,432 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 19745
+[INFO] 2026-07-03 10:19:54,681 django.server: "GET /api/v1/pet/1/2/get/ HTTP/1.1" 200 8152
+[INFO] 2026-07-03 10:20:09,833 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-07-03 10:20:09,968 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 10:49:17,892 django.server: "OPTIONS /api/v1/all-center-contacts/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 10:49:17,896 django.server: "OPTIONS /api/v1/all-center-contacts/1/ HTTP/1.1" 200 0
+[WARNING] 2026-07-03 10:49:17,905 django.request: Unauthorized: /api/v1/all-center-contacts/1/
+[WARNING] 2026-07-03 10:49:17,906 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 401 172
+[WARNING] 2026-07-03 10:49:17,916 django.request: Unauthorized: /api/v1/all-center-contacts/1/
+[WARNING] 2026-07-03 10:49:17,917 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 401 172
+[INFO] 2026-07-03 10:49:18,153 django.server: "POST /api/v1/auth/refresh/ HTTP/1.1" 200 862
+[INFO] 2026-07-03 10:49:18,208 django.server: "POST /api/v1/auth/refresh/ HTTP/1.1" 200 862
+[INFO] 2026-07-03 10:49:18,348 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 200 1126
+[INFO] 2026-07-03 10:49:18,543 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 200 1126
+[INFO] 2026-07-03 10:50:13,556 django.server: "OPTIONS /api/v1/auth/logout/ HTTP/1.1" 200 0
+[WARNING] 2026-07-03 10:50:13,689 django.request: Bad Request: /api/v1/auth/logout/
+[WARNING] 2026-07-03 10:50:13,690 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 400 44
+[INFO] 2026-07-03 10:52:35,668 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-03 10:52:39,582 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-03 10:52:41,528 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 10:52:41,651 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 10:52:53,380 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 19745
+[INFO] 2026-07-03 10:52:58,791 django.server: "GET /api/v1/pet/1/2/get/ HTTP/1.1" 200 8152
+[INFO] 2026-07-03 10:53:03,527 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 200 1126
+[INFO] 2026-07-03 10:53:03,730 django.server: "GET /api/v1/all-center-contacts/1/ HTTP/1.1" 200 1126
+[INFO] 2026-07-03 10:53:10,708 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 10:53:10,744 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-07-03 10:55:29,016 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 204 0
+[INFO] 2026-07-03 12:30:29,742 django.server: "OPTIONS /api/v1/auth/available-centers/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 12:30:31,089 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-03 12:30:32,673 django.server: "OPTIONS /api/v1/auth/login/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 12:30:34,266 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-03 12:30:36,043 django.server: "OPTIONS /api/v1/auth/me/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 12:30:36,211 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 12:30:36,433 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 12:30:44,140 django.server: "OPTIONS /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 12:30:44,140 django.server: "OPTIONS /api/v1/center-vets/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 12:30:44,414 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 12:30:44,436 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-07-03 12:30:53,879 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 204 0
+[INFO] 2026-07-03 15:10:41,467 django.server: "OPTIONS /api/v1/auth/available-centers/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:10:42,844 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-03 15:10:44,679 django.server: "OPTIONS /api/v1/auth/login/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:10:46,212 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-03 15:10:46,664 django.server: "OPTIONS /api/v1/auth/me/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:10:46,843 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 15:10:46,958 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-03 15:11:27,129 django.server: "OPTIONS /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:11:27,395 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 19745
+[INFO] 2026-07-03 15:11:31,873 django.server: "OPTIONS /api/v1/pet/1/2/get/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:11:32,076 django.server: "GET /api/v1/pet/1/2/get/ HTTP/1.1" 200 8152
+[INFO] 2026-07-03 15:11:44,622 django.server: "OPTIONS /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:11:44,626 django.server: "OPTIONS /api/v1/center-vets/1/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 15:11:45,007 django.server: "GET /api/v1/all-catalog/species-breeds/1/ HTTP/1.1" 200 882
+[INFO] 2026-07-03 15:11:45,209 django.server: "GET /api/v1/center-vets/1/ HTTP/1.1" 200 910
+[INFO] 2026-07-03 18:11:02,025 django.server: "OPTIONS /api/v1/auth/logout/ HTTP/1.1" 200 0
+[WARNING] 2026-07-03 18:11:02,045 django.request: Unauthorized: /api/v1/auth/logout/
+[WARNING] 2026-07-03 18:11:02,046 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 401 172
+[INFO] 2026-07-03 18:11:02,057 django.server: "OPTIONS /api/v1/auth/refresh/ HTTP/1.1" 200 0
+[INFO] 2026-07-03 18:11:02,316 django.server: "POST /api/v1/auth/refresh/ HTTP/1.1" 200 862
+[WARNING] 2026-07-03 18:11:02,654 django.request: Bad Request: /api/v1/auth/logout/
+[WARNING] 2026-07-03 18:11:02,655 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 400 44
