@@ -26,7 +26,7 @@ from api.shared.choices.choices import (
 )
 
 
-PET_BASIC_DATA_UPDATE_ALLOWED_ROLES: set[str] = {
+PET_DATA_UPDATE_ALLOWED_ROLES: set[str] = {
     Choices_Role.CENTER_ADMIN.value,
     Choices_Role.VETERINARIAN.value,
     Choices_Role.RECEPTIONIST.value,
@@ -266,13 +266,13 @@ def _validate_actor_membership_for_center(
         )
 
 
-def _ensure_membership_can_update_pet_basic_data(
+def _ensure_membership_can_update_pet_data(
     *,
     membership: Center_Staff_Membership,
 ) -> None:
     role = _get_membership_role(membership)
 
-    if role not in PET_BASIC_DATA_UPDATE_ALLOWED_ROLES:
+    if role not in PET_DATA_UPDATE_ALLOWED_ROLES:
         raise PermissionDenied(
             "No tienes permiso para editar datos del paciente."
         )
@@ -705,7 +705,7 @@ def update_pet(
         center_id=center_id,
     )
 
-    _ensure_membership_can_update_pet_basic_data(
+    _ensure_membership_can_update_pet_data(
         membership=membership,
     )
 

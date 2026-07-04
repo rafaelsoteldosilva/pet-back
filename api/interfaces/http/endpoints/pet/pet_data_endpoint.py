@@ -25,7 +25,7 @@ from api.interfaces.http.responses.validation_error_response import (
     build_django_validation_error_response,
 )
 from api.interfaces.http.serializers.pet.update_pet_data_serializer import (
-    UpdatePetBasicDataSerializer,
+    UpdatePetDataSerializer,
 )
 
 
@@ -72,14 +72,16 @@ class Pet_data_endpoint(APIView):
         pet_id: int,
     ) -> Response:
         _ = self
+
         membership = get_active_center_membership(
             actor=request.user,
             center_id=center_id,
             token=request.auth,
         )
+
         actor = cast(Pet_Control_User, request.user)
 
-        serializer = UpdatePetBasicDataSerializer(
+        serializer = UpdatePetDataSerializer(
             data=request.data,
             partial=True,
         )
@@ -88,7 +90,13 @@ class Pet_data_endpoint(APIView):
         validated_data = cast(dict[str, Any], serializer.validated_data)
         data = dict(validated_data)
 
-        reason = cast(str | None, data.pop("reason", None))
+        raw_reason = data.pop("reason", None)
+
+        reason: str | None
+        if isinstance(raw_reason, str):
+            reason = raw_reason.strip() or None
+        else:
+            reason = None
 
         try:
             update_pet(

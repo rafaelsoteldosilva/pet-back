@@ -67,7 +67,7 @@ def get_pet_data(
     pet_id: int,
 ) -> Pet_Data_DTO:
     """
-    Application query for the Basic Pet Data screen.
+    Application query for the Pet Data screen.
 
     Important relationship path:
     - Pet does not directly expose Center_Contact records.

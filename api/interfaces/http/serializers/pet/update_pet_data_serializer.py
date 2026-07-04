@@ -1,4 +1,4 @@
-# api/interfaces/http/serializers/pet/update_pet_basic_data_serializer.py
+# api/interfaces/http/serializers/pet/update_pet_data_serializer.py
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from api.shared.choices.choices import Choices_Sex, Choices_Size
 from api.shared.utils.microchip_validator import microchip_validator
 
 
-class UpdatePetBasicDataSerializer(serializers.Serializer):
+class UpdatePetDataSerializer(serializers.Serializer):
     name = serializers.CharField(
         required=False,
         min_length=1,
@@ -70,6 +70,7 @@ class UpdatePetBasicDataSerializer(serializers.Serializer):
     reference = serializers.CharField(
         required=False,
         allow_blank=True,
+        allow_null=True,
         trim_whitespace=True,
         max_length=100,
     )
@@ -84,10 +85,6 @@ class UpdatePetBasicDataSerializer(serializers.Serializer):
         allow_null=True,
         trim_whitespace=True,
         max_length=50,
-    )
-
-    has_visual_identification = serializers.BooleanField(
-        required=False,
     )
 
     visual_tag = serializers.CharField(
@@ -148,7 +145,15 @@ class UpdatePetBasicDataSerializer(serializers.Serializer):
         max_length=100,
     )
 
+    reason = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+        trim_whitespace=True,
+        max_length=300,
+    )
+
 
 __all__ = [
-    "UpdatePetBasicDataSerializer",
+    "UpdatePetDataSerializer",
 ]
