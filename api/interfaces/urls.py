@@ -69,6 +69,11 @@ urlpatterns = [
         name="update-pet-data",
     ),
     path(
+        "pet/<int:center_id>/<int:pet_id>/delete-draft/",
+        Pet_data_endpoint.as_view(delete_mode="draft"),
+        name="delete-draft-pet-data",
+    ),
+    path(
         "pet/<int:center_id>/create/",
         Pet_data_endpoint.as_view(),
         name="create-pet-data",

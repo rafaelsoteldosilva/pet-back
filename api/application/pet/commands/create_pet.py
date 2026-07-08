@@ -24,6 +24,9 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
 
+from api.application.pet.commands.add_pet_contact_link import (
+    add_pet_contact_link_to_pet,
+)
 from api.domains.pet.errors import (
     PetBreedDoesNotBelongToSpeciesError,
     PetRuleViolationError,
@@ -161,13 +164,6 @@ def _raise_validation_error_for_rule_violation(
 def _raise_validation_error_from_django_error(
     exc: DjangoValidationError,
 ) -> None:
-    """
-    Converts Django model validation errors into DRF validation errors.
-
-    This keeps the application command compatible with API endpoints that expect
-    rest_framework.exceptions.ValidationError.
-    """
-
     if hasattr(exc, "message_dict"):
         raise ValidationError(exc.message_dict) from exc
 
@@ -257,6 +253,126 @@ def _get_membership_role(membership: Center_Staff_Membership) -> str:
     return _clean_string(getattr(role, "value", role))
 
 
+def _normalize_contact_links_for_create(
+    contact_links: Any,
+) -> list[dict[str, Any]]:
+    if not isinstance(contact_links, list):
+        raise ValidationError(
+            {
+                "contact_links": [
+                    "La lista de contactos del paciente es obligatoria.",
+                ]
+            }
+        )
+
+    if len(contact_links) == 0:
+        raise ValidationError(
+            {
+                "contact_links": [
+                    "Debes agregar al menos un contacto principal.",
+                ]
+            }
+        )
+
+    normalized_links: list[dict[str, Any]] = []
+    selected_contact_ids: set[int] = set()
+    primary_count = 0
+
+    for index, raw_link in enumerate(contact_links):
+        if not isinstance(raw_link, dict):
+            raise ValidationError(
+                {
+                    "contact_links": [
+                        f"El contacto #{index + 1} no tiene un formato válido.",
+                    ]
+                }
+            )
+
+        center_contact_id = _coerce_required_int(
+            "center_contact_id",
+            raw_link.get("center_contact_id"),
+        )
+
+        if center_contact_id in selected_contact_ids:
+            raise ValidationError(
+                {
+                    "contact_links": [
+                        "No puedes agregar el mismo contacto más de una vez.",
+                    ]
+                }
+            )
+
+        selected_contact_ids.add(center_contact_id)
+
+        role = _clean_string(raw_link.get("role")).upper()
+
+        if not role:
+            raise ValidationError(
+                {
+                    "contact_links": [
+                        f"El contacto #{index + 1} no tiene rol asignado.",
+                    ]
+                }
+            )
+
+        is_primary_contact = raw_link.get("is_primary_contact") is True
+
+        if is_primary_contact:
+            primary_count += 1
+
+        can_receive_billing = (
+            True
+            if role == "BILLING_RESPONSIBLE"
+            else raw_link.get("can_receive_billing") is True
+        )
+
+        normalized_links.append(
+            {
+                "center_contact_id": center_contact_id,
+                "role": role,
+                "specific_relationship": _clean_optional_string(
+                    raw_link.get("specific_relationship"),
+                ),
+                "is_primary_contact": is_primary_contact,
+                "is_emergency_contact": (
+                    raw_link.get("is_emergency_contact") is True
+                ),
+                "can_authorize_treatment": (
+                    raw_link.get("can_authorize_treatment") is True
+                ),
+                "can_receive_medical_updates": (
+                    raw_link.get("can_receive_medical_updates") is True
+                ),
+                "can_receive_billing": can_receive_billing,
+                "can_pickup_pet": raw_link.get("can_pickup_pet") is True,
+                "pet_contact_notes": _clean_optional_string(
+                    raw_link.get("pet_contact_notes")
+                    or raw_link.get("pet_contact_link_notes"),
+                ),
+            }
+        )
+
+    if primary_count == 0:
+        raise ValidationError(
+            {
+                "contact_links": [
+                    "Debes marcar un contacto principal.",
+                ]
+            }
+        )
+
+    if primary_count > 1:
+        raise ValidationError(
+            {
+                "contact_links": [
+                    "Solo puede haber un contacto principal.",
+                ]
+            }
+        )
+
+    return normalized_links
+
+
 def _build_pet_audit_values(pet: Pet) -> dict[str, Any]:
     return {
         "id": pet.id,
@@ -283,6 +399,11 @@ def _build_pet_audit_values(pet: Pet) -> dict[str, Any]:
         "reference": getattr(pet, "reference", None),
         "has_pedigree": getattr(pet, "has_pedigree", False),
         "pedigree_registry": getattr(pet, "pedigree_registry", None),
+        "has_visual_identification": getattr(
+            pet,
+            "has_visual_identification",
+            False,
+        ),
         "visual_tag": getattr(pet, "visual_tag", None),
         "visual_identification_or_tattoo_description": getattr(
             pet,
@@ -356,6 +477,7 @@ def create_pet(
     species_id: int,
     actor: Pet_Control_User,
     membership: Center_Staff_Membership,
+    contact_links: list[dict[str, Any]],
     breed_id: int | None = None,
     sterilized: bool = False,
     birth_date: date | None = None,
@@ -366,6 +488,7 @@ def create_pet(
     reference: str | None = None,
     has_pedigree: bool = False,
     pedigree_registry: str | None = None,
+    has_visual_identification: bool = False,
     visual_tag: str | None = None,
     visual_identification_or_tattoo_description: str | None = None,
     has_microchip: bool = False,
@@ -377,14 +500,14 @@ def create_pet(
     photo_url: str | None = None,
     reason: str | None = None,
 ) -> Pet:
-    """
-    Crea un nuevo paciente veterinario.
-    """
-
     _validate_actor_membership_for_center(
         actor=actor,
         membership=membership,
         center_id=veterinary_center_id,
+    )
+
+    normalized_contact_links = _normalize_contact_links_for_create(
+        contact_links,
     )
 
     normalized_species_id = _coerce_required_int("species_id", species_id)
@@ -427,6 +550,19 @@ def create_pet(
     cleaned_has_pedigree = bool(has_pedigree)
     cleaned_has_microchip = bool(has_microchip)
 
+    cleaned_visual_tag = _clean_optional_string(visual_tag)
+    cleaned_visual_identification_or_tattoo_description = (
+        _clean_optional_string(
+            visual_identification_or_tattoo_description,
+        )
+    )
+
+    cleaned_has_visual_identification = bool(
+        has_visual_identification
+        or cleaned_visual_tag
+        or cleaned_visual_identification_or_tattoo_description
+    )
+
     pet = Pet(
         veterinary_center_id=veterinary_center_id,
         name=cleaned_name,
@@ -446,9 +582,10 @@ def create_pet(
             if cleaned_has_pedigree
             else None
         ),
-        visual_tag=_clean_optional_string(visual_tag),
-        visual_identification_or_tattoo_description=_clean_optional_string(
-            visual_identification_or_tattoo_description
+        has_visual_identification=cleaned_has_visual_identification,
+        visual_tag=cleaned_visual_tag,
+        visual_identification_or_tattoo_description=(
+            cleaned_visual_identification_or_tattoo_description
         ),
         has_microchip=cleaned_has_microchip,
         microchip_code=(
@@ -479,6 +616,19 @@ def create_pet(
         pet.save()
     except DjangoValidationError as exc:
         _raise_validation_error_from_django_error(exc)
+
+    for contact_link in normalized_contact_links:
+        try:
+            add_pet_contact_link_to_pet(
+                center_id=veterinary_center_id,
+                pet_id=pet.id,
+                data=contact_link,
+                actor=actor,
+                membership=membership,
+                reason=reason,
+            )
+        except DjangoValidationError as exc:
+            _raise_validation_error_from_django_error(exc)
 
     _create_pet_created_audit_log(
         pet=pet,
