@@ -28,7 +28,7 @@ from api.shared.constants.constants import (
     UNIQUE_CENTER_CONTACT_DOCUMENT_ID_PER_CENTER,
     URLS_MAX_LENGTH,
     VETERINARY_CENTER_MODEL,
-    Center_Staff_Membership_MODEL,
+    CENTER_STAFF_MEMBERSHIP_MODEL,
     CENTER_CLINICAL_FOCUS_MODEL,
 )
 from api.shared.orm.audit_mixins import SoftDeleteAuditValidationMixin
@@ -458,7 +458,7 @@ class Center_Clinical_Focus(
     )
 
     soft_deleted_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -758,7 +758,7 @@ class Personnel_Login_Session(FullCleanOnSaveMixin, models.Model):
     """
 
     personnel = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.CASCADE,
         related_name=PERSONNEL_LOGIN_SESSIONS_RN,
     )
@@ -916,7 +916,7 @@ class Center_Contact(
     )
 
     soft_deleted_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1141,7 +1141,7 @@ class Image(
     )
 
     soft_deleted_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

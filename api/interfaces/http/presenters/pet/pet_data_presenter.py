@@ -22,6 +22,9 @@ def pet_data_presenter(
     This presenter must not query ORM models or apply business/application rules.
     The query layer is responsible for building the DTO.
     The presenter only converts the DTO into the HTTP response shape.
+
+    Because Pet_Data_DTO is a dataclass, asdict(dto) also converts nested
+    dataclasses and lists into plain dictionaries/lists.
     """
 
     return asdict(dto)

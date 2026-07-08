@@ -18,7 +18,7 @@ from api.shared.constants.constants import (
     CENTER_HOSPITALIZATION_UNITS_RN,
     CENTER_HOSPITALIZATIONS_RN,
     CENTER_HOSPITALIZED_PET_DAILY_RECORDS_RN,
-    Center_Staff_Membership_MODEL,
+    CENTER_STAFF_MEMBERSHIP_MODEL,
     CONSULTATION_HOSPITALIZATIONS_RN,
     CONSULTATION_MODEL,
     HOSPITALIZATION_ACTIVE_CANNOT_HAVE_DISCHARGED_AT,
@@ -235,7 +235,7 @@ class Hospitalization(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     discharged_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -269,7 +269,7 @@ class Hospitalization(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -282,7 +282,7 @@ class Hospitalization(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -590,7 +590,7 @@ class Hospitalization_Unit(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     soft_deleted_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -598,7 +598,7 @@ class Hospitalization_Unit(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -735,7 +735,7 @@ class Hospitalization_Unit_Assignment(
     )
 
     voided_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -748,7 +748,7 @@ class Hospitalization_Unit_Assignment(
     )
 
     created_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -968,7 +968,7 @@ class Hospitalized_Pet_Daily_Record(
     )
 
     voided_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -981,7 +981,7 @@ class Hospitalized_Pet_Daily_Record(
     )
 
     created_by = models.ForeignKey(
-        Center_Staff_Membership_MODEL,
+        CENTER_STAFF_MEMBERSHIP_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

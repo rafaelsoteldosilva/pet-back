@@ -69,6 +69,11 @@ urlpatterns = [
         name="update-pet-data",
     ),
     path(
+        "pet/<int:center_id>/create/",
+        Pet_data_endpoint.as_view(),
+        name="create-pet-data",
+    ),
+    path(
         "pet-contact-link/<int:center_id>/<int:pet_id>/add/",
         Pet_contact_link_to_pet_endpoint.as_view(),
         name="add-pet-contact",

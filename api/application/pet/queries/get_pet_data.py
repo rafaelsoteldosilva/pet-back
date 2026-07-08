@@ -11,18 +11,17 @@ from django.db.models import Prefetch
 from rest_framework.exceptions import NotFound
 
 from api.application.pet.dto.pet_data_dto import (
-    Pet_Data_DTO,
     Breed_For_Species_In_Center_DTO,
     Center_Contact_Summary_DTO,
+    Center_Staff_Membership_DTO,
     Pet_Contact_Link_DTO,
+    Pet_Data_DTO,
     SexCode,
     Species_In_Center_DTO,
-    Center_Staff_Membership_DTO,
     Veterinary_Center_DTO,
 )
 from api.infrastructure.orm.models.center import Center_Contact
 from api.infrastructure.orm.models.pet import Pet, Pet_Contact_Link
-
 from api.shared.choices.choices import (
     Choices_Center_Contact_Type,
     Choices_Pet_Contact_Link_Role,
@@ -30,11 +29,11 @@ from api.shared.choices.choices import (
 from api.shared.constants.constants import (
     BREED_IN_CENTER_MODEL,
     CENTER_CONTACT_MODEL,
+    CENTER_STAFF_MEMBERSHIP_MODEL,
     PET_CONTACT_LINK_MODEL,
     PET_MODEL,
     SPECIES_IN_CENTER_MODEL,
     VETERINARY_CENTER_MODEL,
-    Center_Staff_Membership_MODEL,
 )
 
 
@@ -96,6 +95,7 @@ def _get_pet_with_related_data_or_raise(
                 "breed",
                 "breed__global_breed",
                 "last_attending_vet",
+                "last_attending_vet__user",
                 "veterinary_center",
             )
             .prefetch_related(
@@ -142,7 +142,10 @@ def from_model(pet: Pet) -> Pet_Data_DTO:
     pet_contact_link_groups = _build_contact_links_from_pet(pet)
 
     return Pet_Data_DTO(
-        id=_get_required_int_pk(pet, model_name=PET_MODEL),
+        id=_get_required_int_pk(
+            pet,
+            model_name=PET_MODEL,
+        ),
         history_code=str(getattr(pet, "history_code", "")),
         name=str(getattr(pet, "name", "")),
         sex=_normalize_sex(getattr(pet, "sex", "u")),
@@ -171,19 +174,24 @@ def from_model(pet: Pet) -> Pet_Data_DTO:
         ),
         sterilized=bool(getattr(pet, "sterilized", False)),
         birth_date=_to_iso_date(getattr(pet, "birth_date", None)),
-        body_description=_none_if_blank(getattr(pet, "body_description", None)),
+        body_description=_none_if_blank(
+            getattr(pet, "body_description", None),
+        ),
         size=_none_if_blank(getattr(pet, "size", None)),
         last_weight=_to_float_or_none(getattr(pet, "last_weight", None)),
         last_attending_vet=(
             Center_Staff_Membership_DTO(
                 id=_get_required_int_pk(
                     vet_obj,
-                    model_name=Center_Staff_Membership_MODEL,
+                    model_name=CENTER_STAFF_MEMBERSHIP_MODEL,
                 ),
                 name=_get_person_name(vet_obj),
             )
             if vet_obj is not None
             else None
+        ),
+        last_attending_vet_external_name=_none_if_blank(
+            getattr(pet, "last_attending_vet_external_name", None),
         ),
         reference=_none_if_blank(getattr(pet, "reference", None)),
         has_pedigree=bool(getattr(pet, "has_pedigree", False)),
@@ -191,7 +199,7 @@ def from_model(pet: Pet) -> Pet_Data_DTO:
             getattr(pet, "pedigree_registry", None),
         ),
         has_visual_identification=bool(
-            getattr(pet, "has_visual_identification", False)
+            getattr(pet, "has_visual_identification", False),
         ),
         visual_tag=_none_if_blank(getattr(pet, "visual_tag", None)),
         visual_identification_or_tattoo_description=_none_if_blank(
@@ -248,15 +256,23 @@ def from_model(pet: Pet) -> Pet_Data_DTO:
         responsible_institutions=(
             pet_contact_link_groups.responsible_institutions
         ),
-        referring_institutions=pet_contact_link_groups.referring_institutions,
+        referring_institutions=(
+            pet_contact_link_groups.referring_institutions
+        ),
         breeders=pet_contact_link_groups.breeders,
-        shelters_or_foundations=pet_contact_link_groups.shelters_or_foundations,
+        shelters_or_foundations=(
+            pet_contact_link_groups.shelters_or_foundations
+        ),
         emergency_contacts=pet_contact_link_groups.emergency_contacts,
-        pickup_authorized_contacts=pet_contact_link_groups.pickup_authorized_contacts,
+        pickup_authorized_contacts=(
+            pet_contact_link_groups.pickup_authorized_contacts
+        ),
         treatment_authorization_contacts=(
             pet_contact_link_groups.treatment_authorization_contacts
         ),
-        medical_update_contacts=pet_contact_link_groups.medical_update_contacts,
+        medical_update_contacts=(
+            pet_contact_link_groups.medical_update_contacts
+        ),
         billing_update_contacts=pet_contact_link_groups.billing_update_contacts,
     )
 
@@ -476,9 +492,7 @@ def _build_center_contact_summary_dto(
             center_contact,
             model_name=CENTER_CONTACT_MODEL,
         ),
-        center_contact_type=str(
-            center_contact.center_contact_type
-        ),
+        center_contact_type=str(center_contact.center_contact_type),
         display_name=_build_center_contact_display_name(
             center_contact,
         ),
@@ -502,9 +516,7 @@ def _build_center_contact_summary_dto(
 def _build_center_contact_display_name(
     center_contact: Center_Contact,
 ) -> Optional[str]:
-    center_contact_type = str(
-        center_contact.center_contact_type
-    ).upper()
+    center_contact_type = str(center_contact.center_contact_type).upper()
 
     if center_contact_type == CenterContactType.INSTITUTION.value:
         return _none_if_blank(center_contact.institution_name)

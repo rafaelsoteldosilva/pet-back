@@ -17,6 +17,7 @@ La capa application:
 from __future__ import annotations
 
 from datetime import date
+from decimal import Decimal
 from typing import Any
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -52,6 +53,15 @@ def _clean_string(value: Any) -> str:
         return str(value).strip()
 
     return value.strip()
+
+
+def _clean_optional_string(value: Any) -> str | None:
+    cleaned = _clean_string(value)
+
+    if not cleaned:
+        return None
+
+    return cleaned
 
 
 def _serialize_date(value: Any) -> str | None:
@@ -191,6 +201,31 @@ def _validate_actor_membership_for_center(
         )
 
 
+def _validate_last_attending_vet_for_center(
+    *,
+    veterinary_center_id: int,
+    last_attending_vet_id: int | None,
+) -> None:
+    if last_attending_vet_id is None:
+        return
+
+    exists = Center_Staff_Membership.objects.filter(
+        id=last_attending_vet_id,
+        veterinary_center_id=veterinary_center_id,
+        is_active=True,
+        user__is_active=True,
+    ).exists()
+
+    if not exists:
+        raise ValidationError(
+            {
+                "last_attending_vet_id": [
+                    "The selected veterinarian does not belong to this center.",
+                ]
+            }
+        )
+
+
 def _get_actor_display_name(actor: Pet_Control_User) -> str:
     get_full_name = getattr(actor, "get_full_name", None)
 
@@ -233,6 +268,44 @@ def _build_pet_audit_values(pet: Pet) -> dict[str, Any]:
         "breed_id": pet.breed_id,
         "sterilized": pet.sterilized,
         "birth_date": _serialize_date(pet.birth_date),
+        "body_description": getattr(pet, "body_description", None),
+        "size": getattr(pet, "size", None),
+        "last_weight": (
+            str(pet.last_weight)
+            if getattr(pet, "last_weight", None) is not None
+            else None
+        ),
+        "last_attending_vet_id": getattr(
+            pet,
+            "last_attending_vet_id",
+            None,
+        ),
+        "reference": getattr(pet, "reference", None),
+        "has_pedigree": getattr(pet, "has_pedigree", False),
+        "pedigree_registry": getattr(pet, "pedigree_registry", None),
+        "visual_tag": getattr(pet, "visual_tag", None),
+        "visual_identification_or_tattoo_description": getattr(
+            pet,
+            "visual_identification_or_tattoo_description",
+            None,
+        ),
+        "has_microchip": getattr(pet, "has_microchip", False),
+        "microchip_code": getattr(pet, "microchip_code", None),
+        "microchip_date": _serialize_date(
+            getattr(pet, "microchip_date", None)
+        ),
+        "microchip_body_region": getattr(
+            pet,
+            "microchip_body_region",
+            None,
+        ),
+        "clinical_observations": getattr(
+            pet,
+            "clinical_observations",
+            None,
+        ),
+        "internal_notes": getattr(pet, "internal_notes", None),
+        "photo_url": getattr(pet, "photo_url", None),
         "status": getattr(pet, "status", ""),
         "clinical_record_status": getattr(
             pet,
@@ -286,6 +359,22 @@ def create_pet(
     breed_id: int | None = None,
     sterilized: bool = False,
     birth_date: date | None = None,
+    body_description: str | None = None,
+    size: str | None = None,
+    last_weight: Decimal | None = None,
+    last_attending_vet_id: int | None = None,
+    reference: str | None = None,
+    has_pedigree: bool = False,
+    pedigree_registry: str | None = None,
+    visual_tag: str | None = None,
+    visual_identification_or_tattoo_description: str | None = None,
+    has_microchip: bool = False,
+    microchip_code: str | None = None,
+    microchip_date: date | None = None,
+    microchip_body_region: str | None = None,
+    clinical_observations: str | None = None,
+    internal_notes: str | None = None,
+    photo_url: str | None = None,
     reason: str | None = None,
 ) -> Pet:
     """
@@ -300,6 +389,10 @@ def create_pet(
 
     normalized_species_id = _coerce_required_int("species_id", species_id)
     normalized_breed_id = _coerce_optional_int("breed_id", breed_id)
+    normalized_last_attending_vet_id = _coerce_optional_int(
+        "last_attending_vet_id",
+        last_attending_vet_id,
+    )
 
     allowed_species_ids = get_allowed_species_ids_for_center(
         veterinary_center_id=veterinary_center_id,
@@ -321,18 +414,68 @@ def create_pet(
     except PetRuleViolationError as exc:
         _raise_validation_error_for_rule_violation(exc)
 
+    _validate_last_attending_vet_for_center(
+        veterinary_center_id=veterinary_center_id,
+        last_attending_vet_id=normalized_last_attending_vet_id,
+    )
+
+    cleaned_name = _clean_string(name)
+
+    if not cleaned_name:
+        raise ValidationError({"name": ["This field is required."]})
+
+    cleaned_has_pedigree = bool(has_pedigree)
+    cleaned_has_microchip = bool(has_microchip)
+
     pet = Pet(
         veterinary_center_id=veterinary_center_id,
-        name=name,
+        name=cleaned_name,
         sex=sex,
         species_id=normalized_species_id,
         breed_id=normalized_breed_id,
-        sterilized=sterilized,
+        sterilized=bool(sterilized),
         birth_date=birth_date,
+        body_description=_clean_optional_string(body_description),
+        size=_clean_optional_string(size),
+        last_weight=last_weight,
+        last_attending_vet_id=normalized_last_attending_vet_id,
+        reference=_clean_optional_string(reference),
+        has_pedigree=cleaned_has_pedigree,
+        pedigree_registry=(
+            _clean_optional_string(pedigree_registry)
+            if cleaned_has_pedigree
+            else None
+        ),
+        visual_tag=_clean_optional_string(visual_tag),
+        visual_identification_or_tattoo_description=_clean_optional_string(
+            visual_identification_or_tattoo_description
+        ),
+        has_microchip=cleaned_has_microchip,
+        microchip_code=(
+            _clean_optional_string(microchip_code)
+            if cleaned_has_microchip
+            else None
+        ),
+        microchip_date=(
+            microchip_date
+            if cleaned_has_microchip
+            else None
+        ),
+        microchip_body_region=(
+            _clean_optional_string(microchip_body_region)
+            if cleaned_has_microchip
+            else None
+        ),
+        clinical_observations=_clean_optional_string(
+            clinical_observations
+        ),
+        internal_notes=_clean_optional_string(internal_notes),
+        photo_url=_clean_optional_string(photo_url),
     )
 
     try:
         pet.assign_history_code_if_missing()
+        pet.full_clean()
         pet.save()
     except DjangoValidationError as exc:
         _raise_validation_error_from_django_error(exc)

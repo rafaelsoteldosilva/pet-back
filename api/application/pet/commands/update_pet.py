@@ -61,6 +61,7 @@ WRITABLE_PET_FIELDS: set[str] = {
     "size",
     "last_weight",
     "last_attending_vet_id",
+    "last_attending_vet_external_name",
     "reference",
     "sterilized",
     "has_pedigree",
@@ -86,6 +87,7 @@ NULLABLE_TEXT_FIELDS: set[str] = {
     "photo_url",
     "body_description",
     "size",
+    "last_attending_vet_external_name",
     "pedigree_registry",
     "visual_tag",
     "visual_identification_or_tattoo_description",
@@ -261,9 +263,7 @@ def _validate_actor_membership_for_center(
         )
 
     if not membership.veterinary_center.is_active:
-        raise PermissionDenied(
-            "El centro veterinario no está activo."
-        )
+        raise PermissionDenied("El centro veterinario no está activo.")
 
 
 def _ensure_membership_can_update_pet_data(
@@ -352,6 +352,71 @@ def _ensure_last_attending_vet_is_valid_for_center(
         )
 
 
+def _enforce_last_attending_vet_rules(
+    *,
+    pet: Pet,
+    payload: dict[str, Any],
+) -> None:
+    """
+    Rules:
+
+    - Internal veterinarian:
+        last_attending_vet_id = some id
+        last_attending_vet_external_name = None
+
+    - External veterinarian:
+        last_attending_vet_id = None
+        last_attending_vet_external_name = non-empty string
+
+    - No veterinarian:
+        both are None
+
+    This is the piece that prevents the external name from being ignored.
+    """
+
+    vet_id_touched = "last_attending_vet_id" in payload
+    external_name_touched = "last_attending_vet_external_name" in payload
+
+    if not vet_id_touched and not external_name_touched:
+        return
+
+    current_vet_id = getattr(pet, "last_attending_vet_id", None)
+    current_external_name = _clean_optional_string(
+        getattr(pet, "last_attending_vet_external_name", None)
+    )
+
+    next_vet_id = payload.get("last_attending_vet_id", current_vet_id)
+    next_external_name = _clean_optional_string(
+        payload.get(
+            "last_attending_vet_external_name",
+            current_external_name,
+        )
+    )
+
+    if external_name_touched:
+        payload["last_attending_vet_external_name"] = next_external_name
+
+    if next_vet_id is not None and next_external_name:
+        raise DjangoValidationError(
+            {
+                "last_attending_vet": [
+                    "No puedes asignar un veterinario del centro y un veterinario externo al mismo tiempo."
+                ]
+            }
+        )
+
+    if external_name_touched and next_external_name:
+        payload["last_attending_vet_id"] = None
+        return
+
+    if vet_id_touched and next_vet_id is not None:
+        payload["last_attending_vet_external_name"] = None
+        return
+
+    if vet_id_touched and next_vet_id is None and not next_external_name:
+        payload["last_attending_vet_external_name"] = None
+
+
 def _clear_pet_relation_cache_if_needed(
     *,
     pet: Pet,
@@ -393,11 +458,11 @@ def _resolve_has_pedigree_and_registry_from_payload_or_pet(
     return has_pedigree, _clean_optional_string(pedigree_registry)
 
 
-def _resolve_has_microchip_and_code_from_payload_or_pet(
+def _resolve_microchip_data_from_payload_or_pet(
     *,
     pet: Pet,
     payload: dict[str, Any],
-) -> tuple[bool, str | None]:
+) -> tuple[bool, str | None, date | None, str | None]:
     has_microchip = bool(payload.get("has_microchip", pet.has_microchip))
 
     microchip_code = payload.get(
@@ -405,7 +470,22 @@ def _resolve_has_microchip_and_code_from_payload_or_pet(
         pet.microchip_code,
     )
 
-    return has_microchip, _clean_optional_string(microchip_code)
+    microchip_date = payload.get(
+        "microchip_date",
+        pet.microchip_date,
+    )
+
+    microchip_body_region = payload.get(
+        "microchip_body_region",
+        pet.microchip_body_region,
+    )
+
+    return (
+        has_microchip,
+        _clean_optional_string(microchip_code),
+        microchip_date,
+        _clean_optional_string(microchip_body_region),
+    )
 
 
 def _resolve_birth_date_and_microchip_date_from_payload_or_pet(
@@ -506,6 +586,7 @@ def validate_pet_microchip_consistency_with_has_microchip(
     has_microchip: bool,
     microchip_code: str | None,
     microchip_date: date | None,
+    microchip_body_region: str | None,
 ) -> None:
     if has_microchip:
         return
@@ -520,6 +601,11 @@ def validate_pet_microchip_consistency_with_has_microchip(
     if microchip_date is not None:
         errors["microchip_date"] = [
             "No puedes registrar una fecha de microchip si el paciente no tiene microchip."
+        ]
+
+    if microchip_body_region:
+        errors["microchip_body_region"] = [
+            "No puedes registrar una ubicación de microchip si el paciente no tiene microchip."
         ]
 
     if errors:
@@ -719,12 +805,6 @@ def update_pet(
     if not payload:
         return pet
 
-    if "last_attending_vet_id" in payload:
-        _ensure_last_attending_vet_is_valid_for_center(
-            center_id=center_id,
-            last_attending_vet_id=payload["last_attending_vet_id"],
-        )
-
     _apply_status_timestamp_rules(
         pet=pet,
         payload=payload,
@@ -735,100 +815,112 @@ def update_pet(
         payload=payload,
     )
 
-    species_id_for_validation, breed_id_for_validation = (
-        _resolve_species_and_breed_from_payload_or_pet(
-            pet=pet,
-            payload=payload,
-        )
+    _enforce_last_attending_vet_rules(
+        pet=pet,
+        payload=payload,
     )
 
-    has_pedigree_for_validation, pedigree_registry_for_validation = (
+    if "last_attending_vet_id" in payload:
+        _ensure_last_attending_vet_is_valid_for_center(
+            center_id=center_id,
+            last_attending_vet_id=payload["last_attending_vet_id"],
+        )
+
+    allowed_species_ids = get_allowed_species_ids_for_center(
+        veterinary_center_id=center_id,
+    )
+
+    species_id, breed_id = _resolve_species_and_breed_from_payload_or_pet(
+        pet=pet,
+        payload=payload,
+    )
+
+    breed_species_id = (
+        get_species_id_for_breed(breed_id)
+        if breed_id is not None
+        else None
+    )
+
+    validate_pet_species_and_breed_for_center(
+        species_id=species_id,
+        allowed_species_ids=allowed_species_ids,
+        breed_id=breed_id,
+        breed_species_id=breed_species_id,
+    )
+
+    has_pedigree, pedigree_registry = (
         _resolve_has_pedigree_and_registry_from_payload_or_pet(
             pet=pet,
             payload=payload,
         )
     )
 
-    has_microchip_for_validation, microchip_code_for_validation = (
-        _resolve_has_microchip_and_code_from_payload_or_pet(
-            pet=pet,
-            payload=payload,
-        )
+    validate_pet_pedigree_consistency_with_has_pedigree(
+        has_pedigree=has_pedigree,
+        pedigree_registry=pedigree_registry,
     )
 
-    birth_date_for_validation, microchip_date_for_validation = (
+    (
+        has_microchip,
+        microchip_code,
+        microchip_date,
+        microchip_body_region,
+    ) = _resolve_microchip_data_from_payload_or_pet(
+        pet=pet,
+        payload=payload,
+    )
+
+    validate_pet_microchip_consistency_with_has_microchip(
+        has_microchip=has_microchip,
+        microchip_code=microchip_code,
+        microchip_date=microchip_date,
+        microchip_body_region=microchip_body_region,
+    )
+
+    birth_date, resolved_microchip_date = (
         _resolve_birth_date_and_microchip_date_from_payload_or_pet(
             pet=pet,
             payload=payload,
         )
     )
 
-    allowed_species_ids = get_allowed_species_ids_for_center(
-        veterinary_center_id=center_id,
-    )
-
-    breed_species_id = None
-
-    if breed_id_for_validation is not None:
-        breed_species_id = get_species_id_for_breed(breed_id_for_validation)
-
-    validate_pet_species_and_breed_for_center(
-        species_id=species_id_for_validation,
-        allowed_species_ids=allowed_species_ids,
-        breed_id=breed_id_for_validation,
-        breed_species_id=breed_species_id,
-    )
-
-    validate_pet_pedigree_consistency_with_has_pedigree(
-        has_pedigree=has_pedigree_for_validation,
-        pedigree_registry=pedigree_registry_for_validation,
-    )
-
-    validate_pet_microchip_consistency_with_has_microchip(
-        has_microchip=has_microchip_for_validation,
-        microchip_code=microchip_code_for_validation,
-        microchip_date=microchip_date_for_validation,
-    )
-
     validate_pet_microchip_date_not_before_birth_date(
-        birth_date=birth_date_for_validation,
-        microchip_date=microchip_date_for_validation,
+        birth_date=birth_date,
+        microchip_date=resolved_microchip_date,
     )
 
-    update_fields = set(payload.keys())
+    audit_field_names = set(payload.keys())
 
     before = _build_pet_audit_snapshot(
         pet=pet,
-        field_names=update_fields,
+        field_names=audit_field_names,
     )
 
     for field_name, value in payload.items():
         setattr(pet, field_name, value)
 
+    pet.full_clean()
+
+    update_fields = sorted(payload.keys())
+
+    if _model_has_field(Pet, "updated_at"):
+        update_fields.append("updated_at")
+
+    pet.save(update_fields=update_fields)
+
+    _clear_pet_relation_cache_if_needed(
+        pet=pet,
+        payload=payload,
+    )
+
     after = _build_pet_audit_snapshot(
         pet=pet,
-        field_names=update_fields,
+        field_names=audit_field_names,
     )
 
     old_values, new_values = _build_changed_values(
         before=before,
         after=after,
-    )
-
-    if not old_values and not new_values:
-        return pet
-
-    if _model_has_field(pet, "updated_at"):
-        update_fields.add("updated_at")
-
-    try:
-        pet.save(update_fields=sorted(update_fields))
-    except DjangoValidationError as exc:
-        raise exc
-
-    _clear_pet_relation_cache_if_needed(
-        pet=pet,
-        payload=payload,
     )
 
     _create_pet_update_audit_log(
@@ -839,7 +931,7 @@ def update_pet(
         old_values=old_values,
         new_values=new_values,
     )
-    
+
     return pet
 
 

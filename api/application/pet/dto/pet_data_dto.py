@@ -99,7 +99,17 @@ class Pet_Data_DTO:
     size: Optional[str]
     last_weight: Optional[float]
 
+    # Internal center veterinarian.
+    #
+    # This points to Center_Staff_Membership.
+    # It is None when the pet was attended by an external veterinarian.
     last_attending_vet: Optional[Center_Staff_Membership_DTO]
+
+    # External veterinarian name.
+    #
+    # This is used when the attending veterinarian is not part of the center staff.
+    # In that case, last_attending_vet should normally be None.
+    last_attending_vet_external_name: Optional[str]
 
     reference: Optional[str]
 
