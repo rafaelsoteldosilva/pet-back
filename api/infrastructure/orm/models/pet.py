@@ -10,14 +10,9 @@ from django.db import IntegrityError, models, transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from api.domains.pet.errors import PetRuleViolationError
-from api.domains.pet.rules import (
-    PetContactLinkBillingResponsibleRequiresBillingPermissionError,
-    PetContactLinkCenterContactDifferentCenterError,
-    PetContactLinkInvalidRoleForInstitutionError,
-    PetContactLinkInvalidRoleForPersonError,
-    validate_pet_contact_link_consistency,
-)
+from api.domains.pet.contact_link_policy import validate_pet_contact_link_consistency
+from api.domains.pet.errors import PetContactLinkBillingResponsibleRequiresBillingPermissionError, PetContactLinkCenterContactDifferentCenterError, PetContactLinkInvalidRoleForInstitutionError, PetContactLinkInvalidRoleForPersonError, PetRuleViolationError
+
 from api.shared.choices.choices import (
     Choices_Critical_Case_Status,
     Choices_Disease_Case_Status,

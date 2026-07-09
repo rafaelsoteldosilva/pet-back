@@ -344,7 +344,6 @@ def _raise_django_validation_error_for_delete_rule(
 
     raise DjangoValidationError(error_data) from exc
 
-
 def delete_pet(
     *,
     center_id: int,

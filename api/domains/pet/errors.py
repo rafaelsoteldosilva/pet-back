@@ -86,6 +86,17 @@ class PetCannotBeDeletedBecauseClinicalRecordsExistError(PetRuleViolationError):
         super().__init__(message)
 
 
+class PetCannotBeDeletedByDifferentUserError(PetRuleViolationError):
+    """
+    Raised when a user tries to delete a pet created by another user.
+    """
+
+    def __init__(self):
+        super().__init__(
+            "Solo el usuario que creó el paciente puede eliminarlo."
+        )
+
+
 # ======================================================
 # Pedigree errors
 # ======================================================
@@ -160,16 +171,6 @@ class PetContactLinkCenterContactInvalidTypeError(PetRuleViolationError):
 
     def __init__(self):
         super().__init__("Tipo de contacto inválido.")
-        
-class PetCannotBeDeletedByDifferentUserError(PetRuleViolationError):
-    """
-    Raised when a user tries to delete a pet created by another user.
-    """
-
-    def __init__(self):
-        super().__init__(
-            "Solo el usuario que creó el paciente puede eliminarlo."
-        )
 
 
 class PetContactLinkBillingResponsibleRequiresBillingPermissionError(
