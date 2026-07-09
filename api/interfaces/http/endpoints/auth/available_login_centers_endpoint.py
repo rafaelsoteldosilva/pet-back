@@ -11,7 +11,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.infrastructure.orm.models import Center_Staff_Membership
+from api.infrastructure.orm.models import Center_Staff_Member
 from api.interfaces.http.presenters.auth.available_login_centers_presenter import (
     available_login_centers_presenter,
 )
@@ -28,14 +28,14 @@ class AvailableLoginCentersValidatedData(TypedDict):
 class Available_login_centers_endpoint(APIView):
     """
     Returns the active veterinary centers where the user has an active staff
-    membership.
+    member.
 
     This endpoint is intentionally public because it runs before JWT login.
 
     Security:
     - It does not return centers unless the email and password are valid.
     - It does not reveal whether the email exists.
-    - It only returns active memberships in active centers.
+    - It only returns active members in active centers.
     """
 
     authentication_classes = []
@@ -71,8 +71,8 @@ class Available_login_centers_endpoint(APIView):
         if not user.is_active:
             return self._invalid_credentials_response()
 
-        memberships = (
-            Center_Staff_Membership.objects.select_related("veterinary_center")
+        members = (
+            Center_Staff_Member.objects.select_related("veterinary_center")
             .filter(
                 user=user,
                 is_active=True,
@@ -81,7 +81,7 @@ class Available_login_centers_endpoint(APIView):
             .order_by("veterinary_center__name")
         )
 
-        response_data = available_login_centers_presenter(memberships)
+        response_data = available_login_centers_presenter(members)
 
         return Response(response_data, status=status.HTTP_200_OK)
 

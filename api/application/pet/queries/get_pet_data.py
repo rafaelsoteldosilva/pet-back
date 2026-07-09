@@ -13,7 +13,7 @@ from rest_framework.exceptions import NotFound
 from api.application.pet.dto.pet_data_dto import (
     Breed_For_Species_In_Center_DTO,
     Center_Contact_Summary_DTO,
-    Center_Staff_Membership_DTO,
+    Center_Staff_Member_DTO,
     Pet_Contact_Link_DTO,
     Pet_Data_DTO,
     SexCode,
@@ -29,7 +29,7 @@ from api.shared.choices.choices import (
 from api.shared.constants.constants import (
     BREED_IN_CENTER_MODEL,
     CENTER_CONTACT_MODEL,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
     PET_CONTACT_LINK_MODEL,
     PET_MODEL,
     SPECIES_IN_CENTER_MODEL,
@@ -180,10 +180,10 @@ def from_model(pet: Pet) -> Pet_Data_DTO:
         size=_none_if_blank(getattr(pet, "size", None)),
         last_weight=_to_float_or_none(getattr(pet, "last_weight", None)),
         last_attending_vet=(
-            Center_Staff_Membership_DTO(
+            Center_Staff_Member_DTO(
                 id=_get_required_int_pk(
                     vet_obj,
-                    model_name=CENTER_STAFF_MEMBERSHIP_MODEL,
+                    model_name=CENTER_STAFF_MEMBER_MODEL,
                 ),
                 name=_get_person_name(vet_obj),
             )

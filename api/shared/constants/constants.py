@@ -20,7 +20,7 @@ VERDE_ESMERALDA = "#10b981"
 
 VETERINARY_CENTER_MODEL = "Veterinary_Center"
 CENTER_CLINICAL_FOCUS_MODEL = "Center_Clinical_Focus"
-CENTER_STAFF_MEMBERSHIP_MODEL = "Center_Staff_Membership"
+CENTER_STAFF_MEMBER_MODEL = "Center_Staff_Member"
 CENTER_CONTACT_MODEL = "Center_Contact"
 GLOBAL_SPECIES_MODEL = "Global_Species"
 GLOBAL_BREED_MODEL = "Global_Breed"

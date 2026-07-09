@@ -26,8 +26,11 @@ from api.application.center.errors import (
     CenterContactNotFoundError,
     VeterinaryCenterNotFoundError,
 )
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
+)
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
 )
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.interfaces.http.presenters.center.center_contact_presenter import (
@@ -67,13 +70,32 @@ def _build_contact_has_pet_links_message(
     if remaining_pet_count == 1:
         extra_text = ". Además, tiene 1 mascota más vinculada"
     elif remaining_pet_count > 1:
-        extra_text = f". Además, tiene {remaining_pet_count} mascotas más vinculadas"
+        extra_text = (
+            f". Además, tiene {remaining_pet_count} mascotas más vinculadas"
+        )
 
     return (
         "No puedes eliminar este contacto porque está vinculado a "
         f"{pet_names_text}{extra_text}. Primero debes quitar esos vínculos "
         "desde la ficha de las mascotas correspondientes."
     )
+
+
+def _extract_optional_reason_from_delete_request(request: Request) -> str | None:
+    if not isinstance(request.data, dict):
+        return None
+
+    raw_reason = request.data.get("reason")
+
+    if not isinstance(raw_reason, str):
+        return None
+
+    reason = raw_reason.strip()
+
+    if not reason:
+        return None
+
+    return reason
 
 
 class Center_contact_endpoint(APIView):
@@ -83,7 +105,8 @@ class Center_contact_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The URL center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user must have the required permission for the action.
     """
 
     permission_classes = [IsAuthenticated]
@@ -93,25 +116,26 @@ class Center_contact_endpoint(APIView):
         request: Request,
         center_id: int,
     ) -> Response:
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.CREATE_CENTER_CONTACT,
         )
         actor = cast(Pet_Control_User, request.user)
 
         serializer = Add_center_contact_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
+        validated_data = dict(cast(dict[str, Any], serializer.validated_data))
+        reason = cast(str | None, validated_data.pop("reason", None))
 
         try:
             center_contact = add_center_contact(
                 center_id=center_id,
                 data=validated_data,
                 actor=actor,
-                membership=membership,
-                reason=cast(str | None, validated_data.get("reason")),
+                member=member,
+                reason=reason,
             )
         except DjangoValidationError as exc:
             return build_django_validation_error_response(exc)
@@ -127,20 +151,21 @@ class Center_contact_endpoint(APIView):
         center_id: int,
         center_contact_id: int,
     ) -> Response:
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.DELETE_CENTER_CONTACT,
         )
         actor = cast(Pet_Control_User, request.user)
+        reason = _extract_optional_reason_from_delete_request(request)
 
         try:
             delete_center_contact(
                 center_id=center_id,
                 center_contact_id=center_contact_id,
                 actor=actor,
-                membership=membership,
-                reason=None,
+                member=member,
+                reason=reason,
             )
         except VeterinaryCenterNotFoundError as exc:
             raise NotFound("Centro veterinario no encontrado.") from exc
@@ -164,10 +189,10 @@ class Center_contact_endpoint(APIView):
         center_id: int,
         center_contact_id: int,
     ) -> Response:
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.UPDATE_CENTER_CONTACT,
         )
         actor = cast(Pet_Control_User, request.user)
 
@@ -177,7 +202,8 @@ class Center_contact_endpoint(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
+        validated_data = dict(cast(dict[str, Any], serializer.validated_data))
+        reason = cast(str | None, validated_data.pop("reason", None))
 
         try:
             center_contact = update_center_contact(
@@ -185,8 +211,8 @@ class Center_contact_endpoint(APIView):
                 center_contact_id=center_contact_id,
                 data=validated_data,
                 actor=actor,
-                membership=membership,
-                reason=cast(str | None, validated_data.get("reason")),
+                member=member,
+                reason=reason,
             )
         except VeterinaryCenterNotFoundError as exc:
             raise NotFound("Centro veterinario no encontrado.") from exc

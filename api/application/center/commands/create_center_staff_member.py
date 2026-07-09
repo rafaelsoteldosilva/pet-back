@@ -1,4 +1,4 @@
-# api/application/center/commands/create_center_staff_membership.py
+# api/application/center/commands/create_center_staff_member.py
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from django.db import IntegrityError, transaction
 from rest_framework.exceptions import ValidationError
 
 from api.infrastructure.orm.models import (
-    Center_Staff_Membership,
+    Center_Staff_Member,
     Veterinary_Center,
 )
 from api.infrastructure.orm.models.user import Pet_Control_User
@@ -25,11 +25,11 @@ def _raise_validation_error_from_django_error(
 
 
 @transaction.atomic
-def create_center_staff_membership(
+def create_center_staff_member(
     *,
     center_id: int,
     data: dict[str, Any],
-) -> Center_Staff_Membership:
+) -> Center_Staff_Member:
     email = str(data["email"]).strip().lower()
 
     try:
@@ -60,7 +60,7 @@ def create_center_staff_membership(
             }
         ) from exc
 
-    if Center_Staff_Membership.objects.filter(
+    if Center_Staff_Member.objects.filter(
         user=user,
         veterinary_center=veterinary_center,
     ).exists():
@@ -70,7 +70,7 @@ def create_center_staff_membership(
             }
         )
 
-    staff_membership = Center_Staff_Membership(
+    staff_member = Center_Staff_Member(
         user=user,
         veterinary_center=veterinary_center,
         role=data["role"],
@@ -85,8 +85,8 @@ def create_center_staff_membership(
     )
 
     try:
-        staff_membership.full_clean()
-        staff_membership.save()
+        staff_member.full_clean()
+        staff_member.save()
 
     except DjangoValidationError as exc:
         _raise_validation_error_from_django_error(exc)
@@ -98,4 +98,4 @@ def create_center_staff_membership(
             }
         ) from exc
 
-    return staff_membership
+    return staff_member

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -13,8 +11,11 @@ from rest_framework.views import APIView
 from api.application.pet.queries.get_all_pets_for_center import (
     get_all_pets_for_center,
 )
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
+)
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
 )
 from api.interfaces.http.presenters.pet.all_pets_for_center_presenter import (
     present_search_pets_list,
@@ -28,22 +29,21 @@ class Get_all_pets_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The URL center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user must have permission to view pets.
     """
 
     permission_classes = [IsAuthenticated]
 
     def get(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
     ) -> Response:
-        _ = self
-
-        get_active_center_membership(
-            actor=request.user,
+        authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.VIEW_PET,
         )
 
         search_type = request.query_params.get("search_type")

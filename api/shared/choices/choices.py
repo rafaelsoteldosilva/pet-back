@@ -209,7 +209,7 @@ class Choices_Role(models.TextChoices):
     VETERINARIAN = "VETERINARIAN", "Médico veterinario"
     ASSISTANT = "ASSISTANT", "Asistente"
     RECEPTIONIST = "RECEPTIONIST", "Recepción"
-    READ_ONLY = "READ_ONLY", "Solo lectura"
+    VIEWER = "VIEWER", "Solo lectura"
 
 
 class Choices_Severity_Level(models.TextChoices):

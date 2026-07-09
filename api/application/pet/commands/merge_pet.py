@@ -17,7 +17,7 @@ from api.infrastructure.orm.models import (
     Pet_Problem_Case,
 )
 from api.infrastructure.orm.models.audit import Audit_Log
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 from api.infrastructure.orm.models.pet import Pet_Contact_Link
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.shared.choices.choices import Choices_Pet_Status
@@ -103,28 +103,28 @@ def _get_existing_update_fields(
     ]
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionError(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionError(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionError(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionError(
             "El centro veterinario no está activo."
         )
@@ -155,8 +155,8 @@ def _get_actor_display_name(actor: Pet_Control_User) -> str:
     return f"User {actor.id}"
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
@@ -295,7 +295,7 @@ def _set_merged_by(
     *,
     secondary: Pet,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
 ) -> None:
     try:
         merged_by_field = secondary._meta.get_field("merged_by")
@@ -316,8 +316,8 @@ def _set_merged_by(
         setattr(secondary, "merged_by", actor)
         return
 
-    if remote_model_name == "Center_Staff_Membership":
-        setattr(secondary, "merged_by", membership)
+    if remote_model_name == "Center_Staff_Member":
+        setattr(secondary, "merged_by", member)
         return
 
     raise ValidationError(
@@ -334,7 +334,7 @@ def _create_pet_merged_audit_log(
     *,
     veterinary_center_id: int,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
     secondary_pet_id: int,
     old_values: dict[str, Any],
@@ -344,7 +344,7 @@ def _create_pet_merged_audit_log(
         veterinary_center_id=veterinary_center_id,
         actor_user_id=actor.id,
         actor_display_name=_get_actor_display_name(actor),
-        actor_role=_get_membership_role(membership),
+        actor_role=_get_member_role(member),
         action=AUDIT_ACTION_PET_MERGED,
         entity_type=AUDIT_ENTITY_TYPE_PET,
         entity_id=secondary_pet_id,
@@ -360,7 +360,7 @@ def merge_pet(
     master_pet_id: int,
     secondary_pet_id: int,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None = None,
 ) -> None:
     if master_pet_id == secondary_pet_id:
@@ -402,9 +402,9 @@ def merge_pet(
             }
         )
 
-    _validate_actor_membership_for_center(
+    _validate_actor_member_for_center(
         actor=actor,
-        membership=membership,
+        member=member,
         center_id=master.veterinary_center_id,
     )
 
@@ -470,7 +470,7 @@ def merge_pet(
     _set_merged_by(
         secondary=secondary,
         actor=actor,
-        membership=membership,
+        member=member,
     )
 
     _save_model(
@@ -505,7 +505,7 @@ def merge_pet(
     _create_pet_merged_audit_log(
         veterinary_center_id=master.veterinary_center_id,
         actor=actor,
-        membership=membership,
+        member=member,
         reason=reason,
         secondary_pet_id=secondary.id,
         old_values=old_values,

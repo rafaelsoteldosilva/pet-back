@@ -89,7 +89,7 @@ from api.shared.constants.constants import (
     UNIQUE_VACCINE_PER_SPECIES_CENTER,
     VERDE_ESMERALDA,
     VETERINARY_CENTER_MODEL,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
 )
 from api.shared.orm.audit_mixins import SoftDeleteAuditValidationMixin
 from api.shared.orm.mixins import FullCleanOnSaveMixin, TrimFieldsMixin
@@ -338,7 +338,7 @@ class Species_In_Center(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -428,7 +428,7 @@ class Breed_In_Center(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -559,7 +559,7 @@ class Disease_Group(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -572,7 +572,7 @@ class Disease_Group(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -695,7 +695,7 @@ class Disease_Catalog(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -708,7 +708,7 @@ class Disease_Catalog(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -838,7 +838,7 @@ class Problem_Group(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -851,7 +851,7 @@ class Problem_Group(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -982,7 +982,7 @@ class Problem_Catalog(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -995,7 +995,7 @@ class Problem_Catalog(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1151,7 +1151,7 @@ class Consultation_Type(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1164,7 +1164,7 @@ class Consultation_Type(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1295,7 +1295,7 @@ class Procedure_Type(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1308,7 +1308,7 @@ class Procedure_Type(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1461,7 +1461,7 @@ class Vaccine_Type(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1474,7 +1474,7 @@ class Vaccine_Type(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1603,7 +1603,7 @@ class Medication(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1616,7 +1616,7 @@ class Medication(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1725,7 +1725,7 @@ class Follow_Up_Category(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1738,7 +1738,7 @@ class Follow_Up_Category(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1840,7 +1840,7 @@ class Clinical_Focus_For_SOAP_Template(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1853,7 +1853,7 @@ class Clinical_Focus_For_SOAP_Template(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1980,7 +1980,7 @@ class SOAP_Template(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1993,7 +1993,7 @@ class SOAP_Template(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2133,7 +2133,7 @@ class Consultation_Template(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2146,7 +2146,7 @@ class Consultation_Template(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2280,7 +2280,7 @@ class Procedure_Template(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2293,7 +2293,7 @@ class Procedure_Template(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -24,7 +24,7 @@
 #
 
 # Models located in api/infrastructure/orm/models/center.py:
-# Veterinary_Center, Veterinary_Center_Settings, Center_Clinical_Focus, Center_Staff_Membership, 
+# Veterinary_Center, Veterinary_Center_Settings, Center_Clinical_Focus, Center_Staff_Member, 
 # Personnel_Login_Session, Center_Contact, Image,
 #
 

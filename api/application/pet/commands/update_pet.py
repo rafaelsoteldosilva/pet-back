@@ -17,7 +17,7 @@ from api.infrastructure.orm.models.catalog import (
     Breed_In_Center,
     Species_In_Center,
 )
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 from api.infrastructure.orm.models.pet import Pet
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.shared.choices.choices import (
@@ -235,42 +235,42 @@ def _get_pet_or_raise(
         ) from exc
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionDenied(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionDenied(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionDenied(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionDenied("El centro veterinario no está activo.")
 
 
-def _ensure_membership_can_update_pet_data(
+def _ensure_member_can_update_pet_data(
     *,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
 ) -> None:
-    role = _get_membership_role(membership)
+    role = _get_member_role(member)
 
     if role not in PET_DATA_UPDATE_ALLOWED_ROLES:
         raise PermissionDenied(
@@ -338,10 +338,10 @@ def _ensure_last_attending_vet_is_valid_for_center(
         "role": Choices_Role.VETERINARIAN.value,
     }
 
-    if _model_has_field(Center_Staff_Membership, "soft_deleted_at"):
+    if _model_has_field(Center_Staff_Member, "soft_deleted_at"):
         filters["soft_deleted_at__isnull"] = True
 
-    if not Center_Staff_Membership.objects.filter(**filters).exists():
+    if not Center_Staff_Member.objects.filter(**filters).exists():
         raise DjangoValidationError(
             {
                 "last_attending_vet_id": [
@@ -753,7 +753,7 @@ def _create_pet_update_audit_log(
     *,
     pet: Pet,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
     old_values: dict[str, Any],
     new_values: dict[str, Any],
@@ -765,7 +765,7 @@ def _create_pet_update_audit_log(
         veterinary_center_id=pet.veterinary_center_id,
         actor_user_id=actor.id,
         actor_display_name=_get_actor_display_name(actor),
-        actor_role=_get_membership_role(membership),
+        actor_role=_get_member_role(member),
         action=AUDIT_ACTION_PET_UPDATED,
         entity_type=AUDIT_ENTITY_TYPE_PET,
         entity_id=pet.id,
@@ -782,17 +782,17 @@ def update_pet(
     pet_id: int,
     data: dict[str, Any],
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
 ) -> Pet:
-    _validate_actor_membership_for_center(
+    _validate_actor_member_for_center(
         actor=actor,
-        membership=membership,
+        member=member,
         center_id=center_id,
     )
 
-    _ensure_membership_can_update_pet_data(
-        membership=membership,
+    _ensure_member_can_update_pet_data(
+        member=member,
     )
 
     pet = _get_pet_or_raise(
@@ -926,7 +926,7 @@ def update_pet(
     _create_pet_update_audit_log(
         pet=pet,
         actor=actor,
-        membership=membership,
+        member=member,
         reason=reason,
         old_values=old_values,
         new_values=new_values,

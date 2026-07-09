@@ -24,7 +24,7 @@ from api.shared.constants.constants import (
     CENTER_CONSULTATIONS_RN,
     CENTER_CONTACT_MODEL,
     CENTER_FOLLOW_UPS_RN,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
     CENTER_PRESCRIPTIONS_RN,
     CLINICAL_EVENT_FOLLOW_UPS_RN,
     CLINICAL_EVENT_IMAGES_RN,
@@ -347,7 +347,7 @@ class Clinical_Event(
     )
 
     vet = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.PROTECT,
         related_name="+",
         limit_choices_to={"role": ROLE_VETERINARIAN},
@@ -369,7 +369,7 @@ class Clinical_Event(
     )
 
     applied_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -384,7 +384,7 @@ class Clinical_Event(
     )
 
     closed_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -425,7 +425,7 @@ class Clinical_Event(
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -439,7 +439,7 @@ class Clinical_Event(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -636,7 +636,7 @@ class Clinical_Event_Image(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -644,7 +644,7 @@ class Clinical_Event_Image(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -792,7 +792,7 @@ class Consultation(
     )
 
     vet = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.PROTECT,
         related_name="+",
         limit_choices_to={"role": ROLE_VETERINARIAN},
@@ -831,7 +831,7 @@ class Consultation(
     )
 
     cancelled_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -850,7 +850,7 @@ class Consultation(
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -904,7 +904,7 @@ class Consultation(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1075,7 +1075,7 @@ class Prescription(
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1089,7 +1089,7 @@ class Prescription(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1244,7 +1244,7 @@ class Follow_Up(
     )
 
     done_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1262,7 +1262,7 @@ class Follow_Up(
     )
 
     cancelled_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1281,7 +1281,7 @@ class Follow_Up(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1289,7 +1289,7 @@ class Follow_Up(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1470,7 +1470,7 @@ class Activity_Log(
     )
 
     vet = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1525,7 +1525,7 @@ class Activity_Log(
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1539,7 +1539,7 @@ class Activity_Log(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1679,7 +1679,7 @@ class Appointment(
     )
 
     assigned_vet = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1773,7 +1773,7 @@ class Appointment(
     )
 
     cancelled_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1792,7 +1792,7 @@ class Appointment(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1800,7 +1800,7 @@ class Appointment(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -48,7 +48,7 @@ from api.shared.constants.constants import (
     UNIQUE_CAMPAIGN_VACCINE_ACTION,
     VACCINE_TYPE_MODEL,
     VETERINARY_CENTER_MODEL,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
 )
 from api.shared.orm.audit_mixins import (
     DeactivationAuditValidationMixin,
@@ -307,7 +307,7 @@ class Campaign(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -320,7 +320,7 @@ class Campaign(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -460,7 +460,7 @@ class Campaign_Action(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -473,7 +473,7 @@ class Campaign_Action(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -667,7 +667,7 @@ class Campaign_Target(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -680,7 +680,7 @@ class Campaign_Target(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -802,7 +802,7 @@ class Campaign_Restriction_Set(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -815,7 +815,7 @@ class Campaign_Restriction_Set(
     )
 
     deactivated_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -828,7 +828,7 @@ class Campaign_Restriction_Set(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -967,7 +967,7 @@ class Campaign_Enrollment(
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

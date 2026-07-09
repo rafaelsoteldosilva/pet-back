@@ -121,7 +121,7 @@ class Pet_Control_User(
     - Este modelo maneja el login global.
     - No pertenece a ningún centro veterinario.
     - Una misma persona puede trabajar en varios centros veterinarios.
-    - El rol local vive en Center_Staff_Membership.
+    - El rol local vive en Center_Staff_Member.
     """
 
     email = models.EmailField(

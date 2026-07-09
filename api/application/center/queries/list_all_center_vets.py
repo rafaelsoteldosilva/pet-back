@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 
 VETERINARIAN_ROLE = "VETERINARIAN"
 
@@ -10,9 +10,9 @@ VETERINARIAN_ROLE = "VETERINARIAN"
 def list_all_center_vets(
     *,
     center_id: int,
-) -> list[Center_Staff_Membership]:
+) -> list[Center_Staff_Member]:
     return list(
-        Center_Staff_Membership.objects.select_related(
+        Center_Staff_Member.objects.select_related(
             "user",
             "veterinary_center",
         )

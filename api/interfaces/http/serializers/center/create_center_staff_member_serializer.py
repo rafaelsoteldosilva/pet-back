@@ -1,4 +1,4 @@
-# api/interfaces/http/serializers/center/create_center_staff_membership_serializer.py
+# api/interfaces/http/serializers/center/create_center_staff_member_serializer.py
 
 from __future__ import annotations
 
@@ -10,11 +10,11 @@ CENTER_STAFF_ROLE_CHOICES = [
     "VETERINARIAN",
     "ASSISTANT",
     "RECEPTIONIST",
-    "READ_ONLY",
+    "VIEWER",
 ]
 
 
-class CreateCenterStaffMembershipSerializer(serializers.Serializer):
+class CreateCenterStaffMemberSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     role = serializers.ChoiceField(

@@ -7,7 +7,7 @@ from typing import Any
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 
 
 class PersonnelJWTAuthentication(JWTAuthentication):
@@ -18,8 +18,8 @@ class PersonnelJWTAuthentication(JWTAuthentication):
             raise AuthenticationFailed("Invalid token: user_id is missing.")
 
         try:
-            user = Center_Staff_Membership.objects.get(pk=user_id)
-        except Center_Staff_Membership.DoesNotExist as exc:
+            user = Center_Staff_Member.objects.get(pk=user_id)
+        except Center_Staff_Member.DoesNotExist as exc:
             raise AuthenticationFailed("Invalid user in JWT.") from exc
 
         if not user.is_active:

@@ -28,7 +28,7 @@ from api.shared.constants.constants import (
     UNIQUE_CENTER_CONTACT_DOCUMENT_ID_PER_CENTER,
     URLS_MAX_LENGTH,
     VETERINARY_CENTER_MODEL,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
     CENTER_CLINICAL_FOCUS_MODEL,
 )
 from api.shared.orm.audit_mixins import SoftDeleteAuditValidationMixin
@@ -43,7 +43,7 @@ from api.shared.utils.normalize_document_id import (
 # Veterinary_Center
 # Veterinary_Center_Settings
 # Center_Clinical_Focus
-# Center_Staff_Membership
+# Center_Staff_Member
 # Personnel_Login_Session
 # Center_Contact
 # Image
@@ -458,7 +458,7 @@ class Center_Clinical_Focus(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -537,7 +537,7 @@ class Center_Clinical_Focus(
         return self.label
 
 
-class Center_Staff_Membership(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
+class Center_Staff_Member(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     """
     Propósito:
     Representa la membresía laboral de un usuario global dentro de un centro veterinario.
@@ -553,13 +553,13 @@ class Center_Staff_Membership(TrimFieldsMixin, FullCleanOnSaveMixin, models.Mode
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="user_staff_memberships",
+        related_name="user_staff_members",
     )
 
     veterinary_center = models.ForeignKey(
         VETERINARY_CENTER_MODEL,
         on_delete=models.CASCADE,
-        related_name="center_staff_memberships",
+        related_name="center_staff_members",
     )
 
     role = models.CharField(
@@ -629,7 +629,7 @@ class Center_Staff_Membership(TrimFieldsMixin, FullCleanOnSaveMixin, models.Mode
         constraints = [
             models.UniqueConstraint(
                 fields=["veterinary_center", "user"],
-                name="unique_vet_center_staff_membership_user_per_center",
+                name="unique_vet_center_staff_member_user_per_center",
             ),
             models.UniqueConstraint(
                 fields=["veterinary_center", "work_email"],
@@ -637,7 +637,7 @@ class Center_Staff_Membership(TrimFieldsMixin, FullCleanOnSaveMixin, models.Mode
                     Q(is_active=True)
                     & Q(work_email__isnull=False)
                 ),
-                name="unique_active_vet_center_staff_membership_work_email_per_center",
+                name="unique_active_vet_center_staff_member_work_email_per_center",
             ),
             models.UniqueConstraint(
                 fields=["veterinary_center", "professional_license_number"],
@@ -645,7 +645,7 @@ class Center_Staff_Membership(TrimFieldsMixin, FullCleanOnSaveMixin, models.Mode
                     Q(is_active=True)
                     & Q(professional_license_number__isnull=False)
                 ),
-                name="unique_active_vet_center_staff_membership_license_per_center",
+                name="unique_active_vet_center_staff_member_license_per_center",
             ),
         ]
 
@@ -758,7 +758,7 @@ class Personnel_Login_Session(FullCleanOnSaveMixin, models.Model):
     """
 
     personnel = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.CASCADE,
         related_name=PERSONNEL_LOGIN_SESSIONS_RN,
     )
@@ -916,7 +916,7 @@ class Center_Contact(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1141,7 +1141,7 @@ class Image(
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1183,7 +1183,7 @@ __all__ = [
     "Veterinary_Center",
     "Veterinary_Center_Settings",
     "Center_Clinical_Focus",
-    "Center_Staff_Membership",
+    "Center_Staff_Member",
     "Personnel_Login_Session",
     "Center_Contact",
     "Image",

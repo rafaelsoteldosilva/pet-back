@@ -4,21 +4,21 @@ from __future__ import annotations
 
 from typing import Any, Iterable
 
-from api.infrastructure.orm.models import Center_Staff_Membership
+from api.infrastructure.orm.models import Center_Staff_Member
 from api.shared.choices.choices import Choices_Role
 
 
 def available_login_centers_presenter(
-    memberships: Iterable[Center_Staff_Membership],
+    members: Iterable[Center_Staff_Member],
 ) -> dict[str, list[dict[str, Any]]]:
     return {
         "centers": [
             {
-                "id": membership.veterinary_center.id,
-                "name": membership.veterinary_center.name,
-                "role": membership.role,
-                "role_label": Choices_Role(membership.role).label,
+                "id": member.veterinary_center.id,
+                "name": member.veterinary_center.name,
+                "role": member.role,
+                "role_label": Choices_Role(member.role).label,
             }
-            for membership in memberships
+            for member in members
         ]
     }

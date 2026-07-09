@@ -33,7 +33,7 @@ from api.shared.constants.constants import (
     CENTER_CRITICAL_CASES_RN,
     CENTER_DISEASE_CASES_RN,
     CENTER_DISEASE_EVENTS_RN,
-    CENTER_STAFF_MEMBERSHIP_MODEL,
+    CENTER_STAFF_MEMBER_MODEL,
     CENTER_PROBLEM_CASES_RN,
     CENTER_PROBLEM_EVENTS_RN,
     CONSULTATION_CRITICAL_CASES_RN,
@@ -525,7 +525,7 @@ class Pet_Contact_Link(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     soft_deleted_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -533,7 +533,7 @@ class Pet_Contact_Link(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -774,7 +774,7 @@ class Pet(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     last_attending_vet = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -898,7 +898,7 @@ class Pet(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -928,7 +928,7 @@ class Pet(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     merged_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1526,7 +1526,7 @@ class Pet_Disease_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     resolved_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -1543,7 +1543,7 @@ class Pet_Disease_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1556,7 +1556,7 @@ class Pet_Disease_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -1798,7 +1798,7 @@ class Pet_Problem_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     resolved_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -1811,7 +1811,7 @@ class Pet_Problem_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1824,7 +1824,7 @@ class Pet_Problem_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -2115,7 +2115,7 @@ class Pet_Disease_Event(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2128,7 +2128,7 @@ class Pet_Disease_Event(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2391,7 +2391,7 @@ class Pet_Problem_Event(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2404,7 +2404,7 @@ class Pet_Problem_Event(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2618,7 +2618,7 @@ class Critical_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     resolved_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2631,7 +2631,7 @@ class Critical_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     voided_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -2644,7 +2644,7 @@ class Critical_Case(TrimFieldsMixin, FullCleanOnSaveMixin, models.Model):
     )
 
     created_by = models.ForeignKey(
-        CENTER_STAFF_MEMBERSHIP_MODEL,
+        CENTER_STAFF_MEMBER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

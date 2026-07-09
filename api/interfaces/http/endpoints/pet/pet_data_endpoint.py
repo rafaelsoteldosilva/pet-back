@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any, cast
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -19,8 +20,11 @@ from api.application.pet.commands.delete_pet import (
 from api.application.pet.commands.update_pet import update_pet
 from api.application.pet.dto.pet_data_dto import Pet_Data_DTO
 from api.application.pet.queries.get_pet_data import get_pet_data
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
+)
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
 )
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.interfaces.http.presenters.pet.pet_data_presenter import (
@@ -37,6 +41,27 @@ from api.interfaces.http.serializers.pet.update_pet_data_serializer import (
 )
 
 
+def _normalize_optional_reason(raw_reason: Any) -> str | None:
+    if not isinstance(raw_reason, str):
+        return None
+
+    reason = raw_reason.strip()
+
+    if not reason:
+        return None
+
+    return reason
+
+
+def _extract_optional_reason_from_request(request: Request) -> str | None:
+    request_data = request.data
+
+    if not isinstance(request_data, Mapping):
+        return None
+
+    return _normalize_optional_reason(request_data.get("reason"))
+
+
 class Pet_data_endpoint(APIView):
     """
     Gets, creates, updates, or deletes pet data for the authenticated user's
@@ -45,24 +70,22 @@ class Pet_data_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The URL center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user must have the required permission for the action.
     """
 
     permission_classes = [IsAuthenticated]
 
     def post(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.CREATE_PET,
         )
-
         actor = cast(Pet_Control_User, request.user)
 
         serializer = CreatePetDataSerializer(data=request.data)
@@ -72,20 +95,13 @@ class Pet_data_endpoint(APIView):
         data = dict(validated_data)
 
         contact_links = data.pop("contact_links", [])
-
-        raw_reason = data.pop("reason", None)
-
-        reason: str | None
-        if isinstance(raw_reason, str):
-            reason = raw_reason.strip() or None
-        else:
-            reason = None
+        reason = _normalize_optional_reason(data.pop("reason", None))
 
         try:
             created_pet = create_pet(
                 veterinary_center_id=center_id,
                 actor=actor,
-                membership=membership,
+                member=member,
                 contact_links=contact_links,
                 reason=reason,
                 **data,
@@ -104,17 +120,15 @@ class Pet_data_endpoint(APIView):
         )
 
     def get(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
     ) -> Response:
-        _ = self
-
-        get_active_center_membership(
-            actor=request.user,
+        authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.VIEW_PET,
         )
 
         pet_data: Pet_Data_DTO = get_pet_data(
@@ -128,19 +142,16 @@ class Pet_data_endpoint(APIView):
         )
 
     def patch(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.UPDATE_PET,
         )
-
         actor = cast(Pet_Control_User, request.user)
 
         current_pet_data: Pet_Data_DTO = get_pet_data(
@@ -153,19 +164,12 @@ class Pet_data_endpoint(APIView):
             data=request.data,
             partial=True,
         )
-
         serializer.is_valid(raise_exception=True)
 
         validated_data = cast(dict[str, Any], serializer.validated_data)
         data = dict(validated_data)
 
-        raw_reason = data.pop("reason", None)
-
-        reason: str | None
-        if isinstance(raw_reason, str):
-            reason = raw_reason.strip() or None
-        else:
-            reason = None
+        reason = _normalize_optional_reason(data.pop("reason", None))
 
         try:
             update_pet(
@@ -173,7 +177,7 @@ class Pet_data_endpoint(APIView):
                 pet_id=pet_id,
                 data=data,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
         except DjangoValidationError as exc:
@@ -190,41 +194,28 @@ class Pet_data_endpoint(APIView):
         )
 
     def delete(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.DELETE_PET,
         )
-
         actor = cast(Pet_Control_User, request.user)
 
-        raw_reason: Any = None
-
-        if isinstance(request.data, dict):
-            raw_reason = request.data.get("reason")
-
-        reason: str | None
-        if isinstance(raw_reason, str):
-            reason = raw_reason.strip() or None
-        else:
-            reason = None
+        reason = _extract_optional_reason_from_request(request)
 
         try:
             delete_pet(
                 center_id=center_id,
                 pet_id=pet_id,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
-
         except PetNotFoundError:
             return Response(
                 {
@@ -232,7 +223,6 @@ class Pet_data_endpoint(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-
         except DjangoValidationError as exc:
             return build_django_validation_error_response(exc)
 

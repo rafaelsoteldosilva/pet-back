@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 from api.interfaces.http.presenters.center.veterinary_center_presenter import (
     veterinary_center_presenter,
 )
@@ -47,7 +47,7 @@ def _build_full_name(
 
 
 def center_vet_presenter(
-    center_vet: Center_Staff_Membership,
+    center_vet: Center_Staff_Member,
 ) -> dict[str, Any]:
     user = center_vet.user
 
@@ -102,7 +102,7 @@ def center_vet_presenter(
 
 
 def list_of_center_vets_presenter(
-    center_vets: list[Center_Staff_Membership],
+    center_vets: list[Center_Staff_Member],
 ) -> list[dict[str, Any]]:
     return [
         center_vet_presenter(center_vet)

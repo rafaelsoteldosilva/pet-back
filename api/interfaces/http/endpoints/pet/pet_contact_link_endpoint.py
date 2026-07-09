@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, cast
 from collections.abc import Mapping
+from typing import Any, cast
 
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
@@ -24,8 +24,11 @@ from api.application.pet.commands.update_pet_contact_link import (
     update_pet_contact_link,
 )
 from api.application.pet.queries.get_pet_data import get_pet_data
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
+)
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
 )
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.interfaces.http.presenters.pet.pet_data_presenter import (
@@ -42,6 +45,25 @@ from api.interfaces.http.serializers.pet.update_pet_contact_link_serializer impo
 )
 
 
+def _extract_optional_reason_from_request(request: Request) -> str | None:
+    request_data = request.data
+
+    if not isinstance(request_data, Mapping):
+        return None
+
+    raw_reason = request_data.get("reason")
+
+    if not isinstance(raw_reason, str):
+        return None
+
+    reason = raw_reason.strip()
+
+    if not reason:
+        return None
+
+    return reason
+
+
 class Pet_contact_link_to_pet_endpoint(APIView):
     """
     Creates, updates, and deletes contact links for a pet.
@@ -49,32 +71,30 @@ class Pet_contact_link_to_pet_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The URL center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user must have the required permission for the action.
     """
 
     permission_classes = [IsAuthenticated]
 
     def post(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.CREATE_PET_CONTACT_LINK,
         )
         actor = cast(Pet_Control_User, request.user)
 
         serializer = AddPetContactLinkSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
-
-        reason = cast(str | None, validated_data.get("reason"))
+        validated_data = dict(cast(dict[str, Any], serializer.validated_data))
+        reason = cast(str | None, validated_data.pop("reason", None))
 
         try:
             add_pet_contact_link_to_pet(
@@ -82,10 +102,9 @@ class Pet_contact_link_to_pet_endpoint(APIView):
                 pet_id=pet_id,
                 data=validated_data,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
-
         except DjangoValidationError as exc:
             return build_django_validation_error_response(exc)
 
@@ -100,18 +119,16 @@ class Pet_contact_link_to_pet_endpoint(APIView):
         )
 
     def patch(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
         pet_contact_link_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.UPDATE_PET_CONTACT_LINK,
         )
         actor = cast(Pet_Control_User, request.user)
 
@@ -121,9 +138,8 @@ class Pet_contact_link_to_pet_endpoint(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
-
-        reason = cast(str | None, validated_data.get("reason"))
+        validated_data = dict(cast(dict[str, Any], serializer.validated_data))
+        reason = cast(str | None, validated_data.pop("reason", None))
 
         try:
             update_pet_contact_link(
@@ -132,13 +148,11 @@ class Pet_contact_link_to_pet_endpoint(APIView):
                 pet_contact_link_id=pet_contact_link_id,
                 data=validated_data,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
-
         except PetContactLinkNotFoundError as exc:
             raise NotFound(str(exc)) from exc
-
         except DjangoValidationError as exc:
             return build_django_validation_error_response(exc)
 
@@ -153,23 +167,19 @@ class Pet_contact_link_to_pet_endpoint(APIView):
         )
 
     def delete(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
         pet_id: int,
         pet_contact_link_id: int,
     ) -> Response:
-        _ = self
-
-        membership = get_active_center_membership(
-            actor=request.user,
+        member = authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.DELETE_PET_CONTACT_LINK,
         )
         actor = cast(Pet_Control_User, request.user)
-
-        request_data = cast(Mapping[str, Any], request.data)
-        reason = cast(str | None, request_data.get("reason"))
+        reason = _extract_optional_reason_from_request(request)
 
         try:
             delete_pet_contact_link_from_pet(
@@ -177,10 +187,9 @@ class Pet_contact_link_to_pet_endpoint(APIView):
                 pet_id=pet_id,
                 pet_contact_link_id=pet_contact_link_id,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
-
         except DjangoValidationError as exc:
             return build_django_validation_error_response(exc)
 
@@ -193,6 +202,7 @@ class Pet_contact_link_to_pet_endpoint(APIView):
             pet_data_presenter(updated_pet_data),
             status=status.HTTP_200_OK,
         )
+
 
 __all__ = [
     "Pet_contact_link_to_pet_endpoint",

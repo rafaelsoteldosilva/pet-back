@@ -36,7 +36,7 @@ from api.domains.pet.rules import (
     validate_pet_species_and_breed_for_center,
 )
 from api.infrastructure.orm.models.audit import Audit_Log
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 from api.infrastructure.orm.models.pet import Pet
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.infrastructure.orm.selectors.catalog import (
@@ -170,28 +170,28 @@ def _raise_validation_error_from_django_error(
     raise ValidationError({"detail": exc.messages}) from exc
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionError(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionError(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionError(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionError(
             "El centro veterinario no está activo."
         )
@@ -205,7 +205,7 @@ def _validate_last_attending_vet_for_center(
     if last_attending_vet_id is None:
         return
 
-    exists = Center_Staff_Membership.objects.filter(
+    exists = Center_Staff_Member.objects.filter(
         id=last_attending_vet_id,
         veterinary_center_id=veterinary_center_id,
         is_active=True,
@@ -247,8 +247,8 @@ def _get_actor_display_name(actor: Pet_Control_User) -> str:
     return f"User {actor.id}"
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
@@ -451,14 +451,14 @@ def _create_pet_created_audit_log(
     *,
     pet: Pet,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
 ) -> None:
     Audit_Log.objects.create(
         veterinary_center_id=pet.veterinary_center_id,
         actor_user_id=actor.id,
         actor_display_name=_get_actor_display_name(actor),
-        actor_role=_get_membership_role(membership),
+        actor_role=_get_member_role(member),
         action=AUDIT_ACTION_PET_CREATED,
         entity_type=AUDIT_ENTITY_TYPE_PET,
         entity_id=pet.id,
@@ -476,7 +476,7 @@ def create_pet(
     sex: str,
     species_id: int,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     contact_links: list[dict[str, Any]],
     breed_id: int | None = None,
     sterilized: bool = False,
@@ -500,9 +500,9 @@ def create_pet(
     photo_url: str | None = None,
     reason: str | None = None,
 ) -> Pet:
-    _validate_actor_membership_for_center(
+    _validate_actor_member_for_center(
         actor=actor,
-        membership=membership,
+        member=member,
         center_id=veterinary_center_id,
     )
 
@@ -624,7 +624,7 @@ def create_pet(
                 pet_id=pet.id,
                 data=contact_link,
                 actor=actor,
-                membership=membership,
+                member=member,
                 reason=reason,
             )
         except DjangoValidationError as exc:
@@ -633,7 +633,7 @@ def create_pet(
     _create_pet_created_audit_log(
         pet=pet,
         actor=actor,
-        membership=membership,
+        member=member,
         reason=reason,
     )
 

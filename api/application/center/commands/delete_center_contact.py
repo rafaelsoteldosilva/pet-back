@@ -15,7 +15,7 @@ from api.application.center.errors import (
 from api.infrastructure.orm.models.audit import Audit_Log
 from api.infrastructure.orm.models.center import (
     Center_Contact,
-    Center_Staff_Membership,
+    Center_Staff_Member,
     Veterinary_Center,
 )
 from api.infrastructure.orm.models.pet import Pet_Contact_Link
@@ -47,28 +47,28 @@ def _serialize_datetime(value: Any) -> str | None:
     return str(value)
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionError(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionError(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionError(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionError(
             "El centro veterinario no está activo."
         )
@@ -99,8 +99,8 @@ def _get_actor_display_name(actor: Pet_Control_User) -> str:
     return f"User {actor.id}"
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
@@ -135,7 +135,7 @@ def _create_center_contact_soft_deleted_audit_log(
     *,
     contact: Center_Contact,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
     old_values: dict[str, Any],
     new_values: dict[str, Any],
@@ -144,7 +144,7 @@ def _create_center_contact_soft_deleted_audit_log(
         veterinary_center_id=contact.veterinary_center_id,
         actor_user_id=actor.id,
         actor_display_name=_get_actor_display_name(actor),
-        actor_role=_get_membership_role(membership),
+        actor_role=_get_member_role(member),
         action=AUDIT_ACTION_CENTER_CONTACT_SOFT_DELETED,
         entity_type=AUDIT_ENTITY_TYPE_CENTER_CONTACT,
         entity_id=contact.id,
@@ -160,12 +160,12 @@ def delete_center_contact(
     center_id: int,
     center_contact_id: int,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
 ) -> None:
-    _validate_actor_membership_for_center(
+    _validate_actor_member_for_center(
         actor=actor,
-        membership=membership,
+        member=member,
         center_id=center_id,
     )
 
@@ -252,7 +252,7 @@ def delete_center_contact(
     _create_center_contact_soft_deleted_audit_log(
         contact=contact,
         actor=actor,
-        membership=membership,
+        member=member,
         reason=reason,
         old_values=old_values,
         new_values=new_values,

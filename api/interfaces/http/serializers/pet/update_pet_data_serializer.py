@@ -95,7 +95,7 @@ class UpdatePetDataSerializer(serializers.Serializer):
     # Compatibility alias:
     # - last_attending_vet
     #
-    # The model behind this FK is Center_Staff_Membership.
+    # The model behind this FK is Center_Staff_Member.
     last_attending_vet_id = serializers.IntegerField(
         required=False,
         allow_null=True,

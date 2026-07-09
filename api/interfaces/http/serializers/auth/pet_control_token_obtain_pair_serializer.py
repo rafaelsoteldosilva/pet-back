@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 
 
 class PetControlTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -29,8 +29,8 @@ class PetControlTokenObtainPairSerializer(TokenObtainPairSerializer):
         user = cast(Any, self.user)
 
         try:
-            membership = (
-                Center_Staff_Membership.objects.select_related(
+            member = (
+                Center_Staff_Member.objects.select_related(
                     "veterinary_center",
                     "user",
                 )
@@ -41,7 +41,7 @@ class PetControlTokenObtainPairSerializer(TokenObtainPairSerializer):
                     is_active=True,
                 )
             )
-        except Center_Staff_Membership.DoesNotExist as exc:
+        except Center_Staff_Member.DoesNotExist as exc:
             raise serializers.ValidationError(
                 {
                     "veterinary_center_id": (
@@ -53,10 +53,10 @@ class PetControlTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         refresh = cast(RefreshToken, self.get_token(user))
 
-        active_center_id = cast(int, membership.veterinary_center_id)
-        active_personnel_id = membership.id
-        active_center_name = str(membership.veterinary_center.name)
-        active_center_role = str(membership.role)
+        active_center_id = cast(int, member.veterinary_center_id)
+        active_personnel_id = member.id
+        active_center_name = str(member.veterinary_center.name)
+        active_center_role = str(member.role)
 
         refresh["active_center_id"] = active_center_id
         refresh["active_center_name"] = active_center_name

@@ -535,7 +535,7 @@ def get_models(apps: StateApps) -> dict[str, Any]:
             "api",
             "Veterinary_Center_Settings",
         ),
-        "Center_Staff_Membership": apps.get_model("api", "Center_Staff_Membership"),
+        "Center_Staff_Member": apps.get_model("api", "Center_Staff_Member"),
         "Center_Contact": apps.get_model("api", "Center_Contact"),
         "Global_Species": apps.get_model("api", "Global_Species"),
         "Global_Breed": apps.get_model("api", "Global_Breed"),
@@ -715,11 +715,11 @@ def seed_personnel(
     loaded_models: dict[str, Any],
     centers: dict[str, Any],
 ) -> dict[str, Any]:
-    Center_Staff_Membership = loaded_models["Center_Staff_Membership"]
+    Center_Staff_Member = loaded_models["Center_Staff_Member"]
 
-    User = Center_Staff_Membership._meta.get_field("user").remote_field.model
+    User = Center_Staff_Member._meta.get_field("user").remote_field.model
 
-    seeded_memberships: dict[str, Any] = {}
+    seeded_members: dict[str, Any] = {}
 
     for staff_data in STAFF_SEED_DATA:
         email = staff_data["email"]
@@ -760,11 +760,11 @@ def seed_personnel(
             defaults=user_defaults,
         )
 
-        staff_membership, _ = Center_Staff_Membership.objects.update_or_create(
+        staff_member, _ = Center_Staff_Member.objects.update_or_create(
             user=user,
             veterinary_center=centers[center_key],
             defaults=existing_model_defaults(
-                Center_Staff_Membership,
+                Center_Staff_Member,
                 {
                     "role": staff_data["role"],
                     "work_email": staff_data["work_email"],
@@ -778,18 +778,18 @@ def seed_personnel(
             ),
         )
 
-        seeded_memberships[email] = staff_membership
+        seeded_members[email] = staff_member
 
         if staff_data["is_default_last_attending_vet"]:
-            seeded_memberships["vet_staff_membership"] = staff_membership
+            seeded_members["vet_staff_member"] = staff_member
 
-    if "vet_staff_membership" not in seeded_memberships:
+    if "vet_staff_member" not in seeded_members:
         raise RuntimeError(
             "At least one seeded staff member must be marked as "
             "is_default_last_attending_vet=True."
         )
 
-    return seeded_memberships
+    return seeded_members
 
 def seed_center_contacts(
     loaded_models: dict[str, Any],
@@ -969,7 +969,7 @@ def seed_pets(
     Pet_Contact_Link = loaded_models["Pet_Contact_Link"]
 
     center_1 = centers["center_1"]
-    vet_staff_membership = personnel["vet_staff_membership"]
+    vet_staff_member = personnel["vet_staff_member"]
 
     catalina = center_contacts["catalina"]
     nelly = center_contacts["nelly"]
@@ -1015,7 +1015,7 @@ def seed_pets(
                     "last_weight": normalize_seed_decimal(
                         pet_data["last_weight"],
                     ),
-                    "last_attending_vet": vet_staff_membership,
+                    "last_attending_vet": vet_staff_member,
                     "sterilized": False,
                     "has_pedigree": False,
                     "has_visual_identification": False,
@@ -1106,8 +1106,8 @@ def unload_data(
     loaded_models = get_models(apps)
 
     Veterinary_Center_Settings = loaded_models["Veterinary_Center_Settings"]
-    Center_Staff_Membership = loaded_models["Center_Staff_Membership"]
-    User = Center_Staff_Membership._meta.get_field("user").remote_field.model
+    Center_Staff_Member = loaded_models["Center_Staff_Member"]
+    User = Center_Staff_Member._meta.get_field("user").remote_field.model
     Center_Contact = loaded_models["Center_Contact"]
     Pet = loaded_models["Pet"]
     Pet_Contact_Link = loaded_models["Pet_Contact_Link"]
@@ -1137,7 +1137,7 @@ def unload_data(
             veterinary_center__id=CENTER_1_DATA["id"],
         ).delete()
 
-        Center_Staff_Membership.objects.filter(
+        Center_Staff_Member.objects.filter(
             work_email__in=SEEDED_STAFF_EMAILS,
             veterinary_center__id=CENTER_1_DATA["id"],
         ).delete()

@@ -1,26 +1,26 @@
-# api/interfaces/http/presenters/center/center_staff_membership_presenter.py
+# api/interfaces/http/presenters/center/center_staff_member_presenter.py
 
 from __future__ import annotations
 
 from typing import Any
 
-from api.infrastructure.orm.models import Center_Staff_Membership
+from api.infrastructure.orm.models import Center_Staff_Member
 
 
-def center_staff_membership_presenter(
-    membership: Center_Staff_Membership,
+def center_staff_member_presenter(
+    member: Center_Staff_Member,
 ) -> dict[str, Any]:
-    user = membership.user
-    veterinary_center = membership.veterinary_center
+    user = member.user
+    veterinary_center = member.veterinary_center
 
     return {
-        "id": membership.id,
-        "role": membership.role,
-        "work_email": membership.work_email,
-        "work_phone": membership.work_phone,
-        "job_title": membership.job_title,
-        "professional_license_number": membership.professional_license_number,
-        "is_active": membership.is_active,
+        "id": member.id,
+        "role": member.role,
+        "work_email": member.work_email,
+        "work_phone": member.work_phone,
+        "job_title": member.job_title,
+        "professional_license_number": member.professional_license_number,
+        "is_active": member.is_active,
         "user": {
             "id": user.id,
             "email": user.email,

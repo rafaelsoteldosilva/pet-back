@@ -10,7 +10,7 @@ from django.db import transaction
 from api.infrastructure.orm.models.audit import Audit_Log
 from api.infrastructure.orm.models.center import (
     Center_Contact,
-    Center_Staff_Membership,
+    Center_Staff_Member,
 )
 from api.infrastructure.orm.models.pet import Pet, Pet_Contact_Link
 from api.infrastructure.orm.models.user import Pet_Control_User
@@ -77,28 +77,28 @@ def _bool_from_any_key(
     return default
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionError(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionError(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionError(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionError(
             "El centro veterinario no está activo."
         )
@@ -129,8 +129,8 @@ def _get_actor_display_name(actor: Pet_Control_User) -> str:
     return f"User {actor.id}"
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
@@ -449,14 +449,14 @@ def _create_pet_contact_link_created_audit_log(
     *,
     pet_contact_link: Pet_Contact_Link,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None,
 ) -> None:
     Audit_Log.objects.create(
         veterinary_center_id=pet_contact_link.pet.veterinary_center_id,
         actor_user_id=actor.id,
         actor_display_name=_get_actor_display_name(actor),
-        actor_role=_get_membership_role(membership),
+        actor_role=_get_member_role(member),
         action=AUDIT_ACTION_PET_CONTACT_LINK_CREATED,
         entity_type=AUDIT_ENTITY_TYPE_PET_CONTACT_LINK,
         entity_id=pet_contact_link.id,
@@ -472,13 +472,13 @@ def _create_pet_contact_link(
     center_contact: Center_Contact,
     role: str,
     defaults: dict[str, Any],
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
 ) -> Pet_Contact_Link:
     pet_contact_link = Pet_Contact_Link(
         pet=pet,
         center_contact=center_contact,
         role=role,
-        created_by=membership,
+        created_by=member,
         **defaults,
     )
 
@@ -495,12 +495,12 @@ def add_pet_contact_link_to_pet(
     pet_id: int,
     data: dict[str, Any],
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None = None,
 ) -> Pet_Contact_Link:
-    _validate_actor_membership_for_center(
+    _validate_actor_member_for_center(
         actor=actor,
-        membership=membership,
+        member=member,
         center_id=center_id,
     )
 
@@ -559,13 +559,13 @@ def add_pet_contact_link_to_pet(
         center_contact=center_contact,
         role=role,
         defaults=pet_contact_link_defaults,
-        membership=membership,
+        member=member,
     )
 
     _create_pet_contact_link_created_audit_log(
         pet_contact_link=pet_contact_link,
         actor=actor,
-        membership=membership,
+        member=member,
         reason=reason,
     )
 

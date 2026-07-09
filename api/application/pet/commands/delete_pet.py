@@ -20,7 +20,7 @@ from api.domains.pet.errors import (
 )
 from api.domains.pet.rules import ensure_pet_can_be_deleted
 from api.infrastructure.orm.models.audit import Audit_Log
-from api.infrastructure.orm.models.center import Center_Staff_Membership
+from api.infrastructure.orm.models.center import Center_Staff_Member
 from api.infrastructure.orm.models.pet import Pet
 from api.infrastructure.orm.models.user import Pet_Control_User
 from api.shared.choices.choices import Choices_Role
@@ -86,44 +86,44 @@ def _normalize_identifier(value: str) -> str:
     )
 
 
-def _get_membership_role(membership: Center_Staff_Membership) -> str:
-    role = getattr(membership, "role", "")
+def _get_member_role(member: Center_Staff_Member) -> str:
+    role = getattr(member, "role", "")
 
     return _clean_string(getattr(role, "value", role))
 
 
-def _validate_actor_membership_for_center(
+def _validate_actor_member_for_center(
     *,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     center_id: int,
 ) -> None:
-    if membership.veterinary_center_id != center_id:
+    if member.veterinary_center_id != center_id:
         raise PermissionDenied(
             "La membresía activa no pertenece al centro veterinario indicado."
         )
 
-    if membership.user_id != actor.id:
+    if member.user_id != actor.id:
         raise PermissionDenied(
             "La membresía activa no pertenece al usuario autenticado."
         )
 
-    if not membership.is_active:
+    if not member.is_active:
         raise PermissionDenied(
             "La membresía del usuario en este centro no está activa."
         )
 
-    if not membership.veterinary_center.is_active:
+    if not member.veterinary_center.is_active:
         raise PermissionDenied(
             "El centro veterinario no está activo."
         )
 
 
-def _ensure_membership_can_delete_pet(
+def _ensure_member_can_delete_pet(
     *,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
 ) -> None:
-    actor_role = _get_membership_role(membership)
+    actor_role = _get_member_role(member)
 
     if actor_role not in PET_DELETE_ALLOWED_ROLES:
         raise PermissionDenied(
@@ -349,7 +349,7 @@ def delete_pet(
     center_id: int,
     pet_id: int,
     actor: Pet_Control_User,
-    membership: Center_Staff_Membership,
+    member: Center_Staff_Member,
     reason: str | None = None,
 ) -> None:
     """
@@ -367,14 +367,14 @@ def delete_pet(
     """
 
     with transaction.atomic():
-        _validate_actor_membership_for_center(
+        _validate_actor_member_for_center(
             actor=actor,
-            membership=membership,
+            member=member,
             center_id=center_id,
         )
 
-        _ensure_membership_can_delete_pet(
-            membership=membership,
+        _ensure_member_can_delete_pet(
+            member=member,
         )
 
         pet = _get_pet_or_raise(
@@ -404,7 +404,7 @@ def delete_pet(
             pet=pet,
         )
 
-        actor_role = _get_membership_role(membership)
+        actor_role = _get_member_role(member)
         audit_reason = _clean_string(reason) or DEFAULT_DELETE_PET_REASON
 
         pet.delete()

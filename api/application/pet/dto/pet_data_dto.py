@@ -22,7 +22,7 @@ class Breed_For_Species_In_Center_DTO:
 
 
 @dataclass(frozen=True)
-class Center_Staff_Membership_DTO:
+class Center_Staff_Member_DTO:
     id: int
     name: str
 
@@ -101,9 +101,9 @@ class Pet_Data_DTO:
 
     # Internal center veterinarian.
     #
-    # This points to Center_Staff_Membership.
+    # This points to Center_Staff_Member.
     # It is None when the pet was attended by an external veterinarian.
-    last_attending_vet: Optional[Center_Staff_Membership_DTO]
+    last_attending_vet: Optional[Center_Staff_Member_DTO]
 
     # External veterinarian name.
     #

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
@@ -15,11 +13,15 @@ from api.application.center.commands.get_all_center_contacts import (
     get_all_center_contacts,
 )
 from api.application.center.errors import VeterinaryCenterNotFoundError
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
 )
-from api.interfaces.http.presenters.center.list_of_center_contacts_presenter import present_list_of_center_contacts
-
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
+)
+from api.interfaces.http.presenters.center.list_of_center_contacts_presenter import (
+    present_list_of_center_contacts,
+)
 
 
 class Get_all_center_contacts_endpoint(APIView):
@@ -29,22 +31,21 @@ class Get_all_center_contacts_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The URL center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user must have permission to view center contacts.
     """
 
     permission_classes = [IsAuthenticated]
 
     def get(
-        self: Any,
+        self,
         request: Request,
         center_id: int,
     ) -> Response:
-        _ = self
-
-        get_active_center_membership(
-            actor=request.user,
+        authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.VIEW_CENTER_CONTACT,
         )
 
         try:

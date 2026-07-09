@@ -10,8 +10,11 @@ from rest_framework.views import APIView
 from api.application.catalog.queries.get_allowed_species_and_breeds_for_center import (
     get_allowed_species_and_breeds_for_center,
 )
-from api.application.shared.permissions.center_membership import (
-    get_active_center_membership,
+from api.application.shared.permissions.center_authorization import (
+    authorize_center_action,
+)
+from api.application.shared.permissions.center_permissions import (
+    CenterPermission,
 )
 
 
@@ -23,7 +26,8 @@ class Get_allowed_species_and_breeds_for_center_endpoint(APIView):
     Security:
     - The user must be authenticated.
     - The requested center_id must match the active_center_id in the token.
-    - The user must have an active membership in that center.
+    - The user must have an active member in that center.
+    - The user role must be allowed to view pet data.
     """
 
     permission_classes = [IsAuthenticated]
@@ -33,10 +37,10 @@ class Get_allowed_species_and_breeds_for_center_endpoint(APIView):
         request: Request,
         center_id: int,
     ) -> Response:
-        get_active_center_membership(
-            actor=request.user,
+        authorize_center_action(
+            request=request,
             center_id=center_id,
-            token=request.auth,
+            permission=CenterPermission.VIEW_PET,
         )
 
         species_with_breeds = get_allowed_species_and_breeds_for_center(

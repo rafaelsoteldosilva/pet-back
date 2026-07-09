@@ -7,7 +7,7 @@ from api.interfaces.http.endpoints.catalog.get_species_and_breeds_allowed_for_ce
 )
 
 from api.interfaces.http.endpoints.center.center_contact_endpoint import Center_contact_endpoint
-from api.interfaces.http.endpoints.center.create_center_staff_membership_endpoint import Create_center_staff_membership_endpoint
+from api.interfaces.http.endpoints.center.create_center_staff_member_endpoint import Create_center_staff_member_endpoint
 from api.interfaces.http.endpoints.center.get_all_center_contacts_endpoint import Get_all_center_contacts_endpoint
 from api.interfaces.http.endpoints.center.list_all_center_vets_endpoint import List_all_center_vets_endpoint
 from api.interfaces.http.endpoints.general.create_pet_control_user_endpoint import Create_pet_control_user_endpoint
@@ -23,9 +23,9 @@ urlpatterns = [
         name="create-pet-control-user",
     ),
     path(
-        "centers/<int:center_id>/staff-memberships/",
-        Create_center_staff_membership_endpoint.as_view(),
-        name="create-center-staff-membership",
+        "centers/<int:center_id>/staff-members/",
+        Create_center_staff_member_endpoint.as_view(),
+        name="create-center-staff-member",
     ),
     path("auth/", include("api.interfaces.http.urls.auth_urls")),
     path(
