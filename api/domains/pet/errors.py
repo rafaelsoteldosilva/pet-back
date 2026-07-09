@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 
 class PetRuleViolationError(Exception):
     """
@@ -41,6 +43,47 @@ class PetBreedDoesNotBelongToSpeciesError(PetRuleViolationError):
         super().__init__(
             f"Breed {self.breed_id} does not belong to species {self.species_id}."
         )
+
+
+# ======================================================
+# Pet deletion errors
+# ======================================================
+
+
+class PetCannotBeDeletedBecauseClinicalRecordsExistError(PetRuleViolationError):
+    """
+    Raised when a pet cannot be deleted because it already has clinical records.
+    """
+
+    def __init__(
+        self,
+        *,
+        clinical_record_sources: Iterable[str],
+    ) -> None:
+        normalized_sources = sorted(
+            {
+                str(source).strip()
+                for source in clinical_record_sources
+                if str(source).strip()
+            }
+        )
+
+        self.clinical_record_sources = normalized_sources
+
+        if normalized_sources:
+            message = (
+                "No se puede eliminar el paciente porque tiene información "
+                "clínica asociada: "
+                + ", ".join(normalized_sources)
+                + "."
+            )
+        else:
+            message = (
+                "No se puede eliminar el paciente porque tiene información "
+                "clínica asociada."
+            )
+
+        super().__init__(message)
 
 
 # ======================================================
@@ -117,6 +160,16 @@ class PetContactLinkCenterContactInvalidTypeError(PetRuleViolationError):
 
     def __init__(self):
         super().__init__("Tipo de contacto inválido.")
+        
+class PetCannotBeDeletedByDifferentUserError(PetRuleViolationError):
+    """
+    Raised when a user tries to delete a pet created by another user.
+    """
+
+    def __init__(self):
+        super().__init__(
+            "Solo el usuario que creó el paciente puede eliminarlo."
+        )
 
 
 class PetContactLinkBillingResponsibleRequiresBillingPermissionError(
@@ -137,6 +190,8 @@ __all__ = [
     "PetRuleViolationError",
     "PetSpeciesNotAllowedForCenterError",
     "PetBreedDoesNotBelongToSpeciesError",
+    "PetCannotBeDeletedBecauseClinicalRecordsExistError",
+    "PetCannotBeDeletedByDifferentUserError",
     "PetPedigreeRegistryRequiresPedigreeError",
     "PetMicrochipCodeRequiresMicrochipCodeError",
     "PetMicrochipCode15DigitsNotApplicableError",

@@ -6,6 +6,8 @@ from collections.abc import Iterable
 from datetime import date
 
 from api.domains.pet.errors import (
+    PetCannotBeDeletedBecauseClinicalRecordsExistError,
+    PetCannotBeDeletedByDifferentUserError,
     PetContactLinkCenterContactDifferentCenterError,
     PetContactLinkCenterContactInvalidTypeError,
     PetBreedDoesNotBelongToSpeciesError,
@@ -35,6 +37,14 @@ def _normalize_ids(values: Iterable[int]) -> set[int]:
 
 def _normalize_choice_code(value: str | None) -> str:
     return str(value or "").strip().upper()
+
+
+def _normalize_strings(values: Iterable[str]) -> set[str]:
+    return {
+        str(value).strip()
+        for value in values
+        if str(value).strip()
+    }
 
 
 # ======================================================
@@ -119,6 +129,43 @@ def validate_pet_species_and_breed_for_center(
         breed_species_id=breed_species_id,
     )
 
+
+# ======================================================
+# Pet deletion rules
+# ======================================================
+
+
+def ensure_pet_can_be_deleted(
+    *,
+    clinical_record_sources: Iterable[str],
+    actor_user_id: int,
+    pet_created_by_user_id: int | None,
+) -> None:
+    """
+    Enforces whether a Pet can be deleted.
+
+    Domain rules:
+    - A pet can be deleted only when it has no clinical records.
+    - A pet can be deleted only by the same user who created it.
+
+    This function receives already-calculated facts from the application layer.
+    It must not import Django ORM models and must not query the database.
+    """
+
+    normalized_sources = sorted(
+        _normalize_strings(clinical_record_sources)
+    )
+
+    if normalized_sources:
+        raise PetCannotBeDeletedBecauseClinicalRecordsExistError(
+            clinical_record_sources=normalized_sources,
+        )
+
+    if pet_created_by_user_id is None:
+        raise PetCannotBeDeletedByDifferentUserError()
+
+    if int(actor_user_id) != int(pet_created_by_user_id):
+        raise PetCannotBeDeletedByDifferentUserError()
 
 # ======================================================
 # Pedigree rules
@@ -340,7 +387,7 @@ def validate_pet_contact_link_consistency(
     - the Center_Contact record must belong to the same veterinary center
       as the pet
     - the selected Pet_Contact_Link role must be compatible with the
-      OCenter_Contact type
+      Center_Contact type
     - active billing responsible links must be able to receive billing info
     """
 
@@ -365,6 +412,7 @@ __all__ = [
     "ensure_pet_species_is_allowed_for_center",
     "ensure_pet_breed_belongs_to_species",
     "validate_pet_species_and_breed_for_center",
+    "ensure_pet_can_be_deleted",
     "validate_pet_pedigree_consistency_with_has_pedigree",
     "validate_pet_microchip_code_consistency_with_has_microchip",
     "validate_pet_microchip_code_15_digits_consistency_with_has_microchip",

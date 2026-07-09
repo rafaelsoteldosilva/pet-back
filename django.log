@@ -79,3 +79,10 @@ api.application.pet.commands.delete_pet_draft.PetNotFoundError: Pet with id 13 w
 [INFO] 2026-07-08 18:58:05,311 django.server: "GET /api/v1/all-pets/1/?search_type=primary_contact&query=cat HTTP/1.1" 200 18216
 [INFO] 2026-07-08 18:58:20,187 django.server: "OPTIONS /api/v1/auth/logout/ HTTP/1.1" 200 0
 [INFO] 2026-07-08 18:58:20,333 django.server: "POST /api/v1/auth/logout/ HTTP/1.1" 204 0
+[INFO] 2026-07-09 10:47:48,572 django.server: "OPTIONS /api/v1/auth/available-centers/ HTTP/1.1" 200 0
+[INFO] 2026-07-09 10:47:50,139 django.server: "POST /api/v1/auth/available-centers/ HTTP/1.1" 200 120
+[INFO] 2026-07-09 10:47:52,042 django.server: "OPTIONS /api/v1/auth/login/ HTTP/1.1" 200 0
+[INFO] 2026-07-09 10:47:53,659 django.server: "POST /api/v1/auth/login/ HTTP/1.1" 200 1100
+[INFO] 2026-07-09 10:47:54,006 django.server: "OPTIONS /api/v1/auth/me/ HTTP/1.1" 200 0
+[INFO] 2026-07-09 10:47:54,203 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724
+[INFO] 2026-07-09 10:47:54,349 django.server: "GET /api/v1/auth/me/ HTTP/1.1" 200 724

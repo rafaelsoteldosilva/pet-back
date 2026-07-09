@@ -11,9 +11,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.application.pet.commands.delete_pet_draft import delete_pet_draft
 from api.application.pet.commands.create_pet import create_pet
-from api.application.pet.commands.update_pet import PetNotFoundError, update_pet
+from api.application.pet.commands.delete_pet import (
+    PetNotFoundError,
+    delete_pet,
+)
+from api.application.pet.commands.update_pet import update_pet
 from api.application.pet.dto.pet_data_dto import Pet_Data_DTO
 from api.application.pet.queries.get_pet_data import get_pet_data
 from api.application.shared.permissions.center_membership import (
@@ -26,8 +29,9 @@ from api.interfaces.http.presenters.pet.pet_data_presenter import (
 from api.interfaces.http.responses.validation_error_response import (
     build_django_validation_error_response,
 )
-
-from api.interfaces.http.serializers.pet.create_pet_data_serializer import CreatePetDataSerializer
+from api.interfaces.http.serializers.pet.create_pet_data_serializer import (
+    CreatePetDataSerializer,
+)
 from api.interfaces.http.serializers.pet.update_pet_data_serializer import (
     UpdatePetDataSerializer,
 )
@@ -35,7 +39,8 @@ from api.interfaces.http.serializers.pet.update_pet_data_serializer import (
 
 class Pet_data_endpoint(APIView):
     """
-    Gets, creates, or updates pet data for the authenticated user's active center.
+    Gets, creates, updates, or deletes pet data for the authenticated user's
+    active center.
 
     Security:
     - The user must be authenticated.
@@ -44,8 +49,6 @@ class Pet_data_endpoint(APIView):
     """
 
     permission_classes = [IsAuthenticated]
-    
-    delete_mode: str | None = None
 
     def post(
         self: Any,
@@ -185,13 +188,15 @@ class Pet_data_endpoint(APIView):
             pet_data_presenter(updated_pet_data),
             status=status.HTTP_200_OK,
         )
-        
+
     def delete(
         self: Any,
         request: Request,
         center_id: int,
         pet_id: int,
     ) -> Response:
+        _ = self
+
         membership = get_active_center_membership(
             actor=request.user,
             center_id=center_id,
@@ -212,35 +217,18 @@ class Pet_data_endpoint(APIView):
             reason = None
 
         try:
-            if self.delete_mode == "draft":
-                delete_pet_draft(
-                    center_id=center_id,
-                    pet_id=pet_id,
-                    actor=actor,
-                    membership=membership,
-                    reason=reason,
-                )
-
-            elif self.delete_mode == "normal":
-                return Response(
-                    {
-                        "detail": "Normal pet deletion is not implemented yet."
-                    },
-                    status=status.HTTP_501_NOT_IMPLEMENTED,
-                )
-
-            else:
-                return Response(
-                    {
-                        "detail": "Delete mode is not configured for this endpoint."
-                    },
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                )
+            delete_pet(
+                center_id=center_id,
+                pet_id=pet_id,
+                actor=actor,
+                membership=membership,
+                reason=reason,
+            )
 
         except PetNotFoundError:
             return Response(
                 {
-                    "detail": "Paciente no encontrado."
+                    "detail": "Paciente no encontrado.",
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
